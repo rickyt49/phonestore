@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Entity
 public class Owner {
+    private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,6 +28,7 @@ public class Owner {
     @NotNull
     @Column(length = 10, nullable = false)
     @Size(min = 10, max = 10)
+    @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String phoneNumber;
 
     @NotNull

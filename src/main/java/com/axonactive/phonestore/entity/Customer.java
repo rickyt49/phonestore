@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @AllArgsConstructor
@@ -15,6 +16,8 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class Customer {
+    private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,6 +29,7 @@ public class Customer {
     @NotNull
     @Column(length = 10)
     @Size(min = 10, max = 10)
+    @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String phoneNumber;
 
 
