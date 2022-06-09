@@ -43,6 +43,6 @@ public class BillDetailServiceImpl implements BillDetailService {
         updatedBillDetail.setDiscountAmount(billDetailDetails.getDiscountAmount());
         updatedBillDetail.setBill(billDetailDetails.getBill());
 
-        return billDetailRepository.save(updatedBillDetail)
+        return billDetailRepository.save(updatedBillDetail);
     }
 }
