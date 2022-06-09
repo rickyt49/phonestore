@@ -9,11 +9,11 @@ import java.util.Optional;
 public interface OwnerService {
     List<Owner> getAll();
 
-    Optional<Owner> findOwnerById(Integer id);
+    Optional<Owner> findById(Integer id);
 
-    Owner saveOwner(Owner owner);
+    Owner save(Owner owner);
 
-    void deleteOwner(Integer id);
+    void delete(Integer id);
 
-    Owner updateAssignment(Integer id, Owner owner) throws ResourceNotFoundException;
+    Owner update(Integer id, Owner ownerDetails) throws ResourceNotFoundException;
 }
