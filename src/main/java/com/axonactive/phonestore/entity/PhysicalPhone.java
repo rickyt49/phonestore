@@ -16,14 +16,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class PhysicalPhone {
+    private final String IMEI_NUMBER_REGEX = "(^$|[0-9]{5,15})";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
     @Column(unique = true, nullable = false, length = 15)
-    @Size(min = 15, max = 15)
-    private Long imei;
+    @Size(min = 5, max = 15)
+    private String imei;
 
     private String color;
 

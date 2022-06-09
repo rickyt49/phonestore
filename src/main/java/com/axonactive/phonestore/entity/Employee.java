@@ -31,16 +31,20 @@ public class Employee {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
     private String email;
+
     @NotNull
     @Column(nullable = false, length = 10)
     @Size(min = 10, max = 10)
     @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String phoneNumber;
+
     private String address;
+
     @NotNull
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private EmployeeType employeeType;
+
     @NotNull
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

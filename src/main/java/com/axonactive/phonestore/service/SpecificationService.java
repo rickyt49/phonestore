@@ -15,5 +15,5 @@ public interface SpecificationService {
 
     void delete(Integer id);
 
-    Specification update(Integer id, Specification specificationDetails) throws ResourceNotFoundException
+    Specification update(Integer id, Specification specificationDetails) throws ResourceNotFoundException;
 }
