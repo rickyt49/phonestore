@@ -7,9 +7,9 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CustomerMapper {
-    CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
+//    CustomerMapper INSTANCE = Mappers.getMapper(CustomerMapper.class);
 
     CustomerDto toDto(Customer customer);
 

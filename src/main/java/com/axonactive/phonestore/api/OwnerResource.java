@@ -16,29 +16,32 @@ import java.util.List;
 @RestController
 @RequestMapping(OwnerResource.PATH)
 public class OwnerResource {
-    public static final String PATH = "/api/owner";
+    public static final String PATH = "/api/owners";
     @Autowired
     OwnerService ownerService;
 
+    @Autowired
+    OwnerMapper ownerMapper;
+
     @GetMapping
     public ResponseEntity<List<OwnerDto>> getAll() {
-        return ResponseEntity.ok(OwnerMapper.INSTANCE.toDtos(ownerService.getAll()));
+        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.getAll()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OwnerDto> getOwnerById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
         Owner owner = ownerService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Owner not found: " + id));
-        return ResponseEntity.ok(OwnerMapper.INSTANCE.toDto(owner));
+        return ResponseEntity.ok(ownerMapper.toDto(owner));
     }
 
     @PostMapping
     public ResponseEntity<OwnerDto> add(@RequestBody OwnerRequest ownerRequest) {
-        Owner createdOwner = new Owner();
-        createdOwner.setFullName(ownerRequest.getFullName());
-        createdOwner.setPhoneNumber(ownerRequest.getPhoneNumber());
-        createdOwner.setAddress(ownerRequest.getAddress());
-        ownerService.save(createdOwner);
-        return ResponseEntity.created(URI.create(OwnerResource.PATH + "/" + createdOwner.getId())).body(OwnerMapper.INSTANCE.toDto(createdOwner));
+        Owner owner = new Owner();
+        owner.setFullName(ownerRequest.getFullName());
+        owner.setPhoneNumber(ownerRequest.getPhoneNumber());
+        owner.setAddress(ownerRequest.getAddress());
+        Owner createdOwner = ownerService.save(owner);
+        return ResponseEntity.created(URI.create(OwnerResource.PATH + "/" + createdOwner.getId())).body(ownerMapper.toDto(createdOwner));
     }
 
     @DeleteMapping("/{id}")
@@ -53,6 +56,6 @@ public class OwnerResource {
         updatedOwner.setFullName(ownerRequest.getFullName());
         updatedOwner.setAddress(ownerRequest.getAddress());
         updatedOwner.setPhoneNumber(ownerRequest.getPhoneNumber());
-        return ResponseEntity.ok(OwnerMapper.INSTANCE.toDto(ownerService.update(id, updatedOwner)));
+        return ResponseEntity.ok(ownerMapper.toDto(ownerService.update(id, updatedOwner)));
     }
 }

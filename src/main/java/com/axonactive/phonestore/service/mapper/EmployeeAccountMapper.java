@@ -8,12 +8,12 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EmployeeAccountMapper {
-    EmployeeAccountMapper INSTANCE = Mappers.getMapper(EmployeeAccountMapper.class);
+//    EmployeeAccountMapper INSTANCE = Mappers.getMapper(EmployeeAccountMapper.class);
 
     @Mapping(source = "employee.id", target = "employeeId")
     EmployeeAccountDto toDto(EmployeeAccount employeeAccount);
 
-    List<EmployeeAccountDto> toDtos(List<EmployeeAccountDto> employeeAccountDtos);
+    List<EmployeeAccountDto> toDtos(List<EmployeeAccount> employeeAccounts);
 }

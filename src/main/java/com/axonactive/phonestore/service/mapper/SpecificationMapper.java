@@ -8,9 +8,9 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface SpecificationMapper {
-    SpecificationMapper INSTANCE = Mappers.getMapper(SpecificationMapper.class);
+//    SpecificationMapper INSTANCE = Mappers.getMapper(SpecificationMapper.class);
 
     @Mapping(target = "ram", expression = "java( Integer.toString(specification.getRam()) + \" GB\")")
 

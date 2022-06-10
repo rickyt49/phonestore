@@ -8,9 +8,9 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BillDetailMapper {
-    BillDetailMapper INSTANCE = Mappers.getMapper(BillDetailMapper.class);
+//    BillDetailMapper INSTANCE = Mappers.getMapper(BillDetailMapper.class);
 
     @Mapping(source = "billDetail.physicalPhone.imei", target = "imei")
     @Mapping(source = "billDetail.physicalPhone.specification.model", target = "model")
