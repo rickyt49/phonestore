@@ -1,4 +1,5 @@
-package com.axonactive.phonestore.service.dto;
+package com.axonactive.phonestore.api.request;
+
 
 import com.axonactive.phonestore.entity.Condition;
 import com.axonactive.phonestore.entity.PhoneStatus;
@@ -11,14 +12,16 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhysicalPhoneDto {
-    private String model;
-    private Long imei;
+public class PhysicalPhoneRequest {
+    private String imei;
     private String color;
-    private String memorySize;
-    private String warranty;
-    private Condition condition;
+    private Integer memorySize;
     private PhoneStatus phoneStatus;
+    private Condition condition;
+    private Integer warranty;
     private Integer importPrice;
     private LocalDate importDate;
+    private Integer storeId;
+    private Integer supplierId;
+    private Integer specificationId;
 }

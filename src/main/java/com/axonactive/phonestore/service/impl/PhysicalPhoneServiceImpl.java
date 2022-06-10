@@ -41,7 +41,6 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
         updatedPhysicalPhone.setImei(physicalPhoneDetails.getImei());
         updatedPhysicalPhone.setColor(physicalPhoneDetails.getColor());
         updatedPhysicalPhone.setPhoneStatus(physicalPhoneDetails.getPhoneStatus());
-        updatedPhysicalPhone.setManufacturerDate(physicalPhoneDetails.getManufacturerDate());
         updatedPhysicalPhone.setCondition(physicalPhoneDetails.getCondition());
         updatedPhysicalPhone.setWarranty(physicalPhoneDetails.getWarranty());
         updatedPhysicalPhone.setImportPrice(physicalPhoneDetails.getImportPrice());

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @Entity
 public class PhysicalPhone {
     private final String IMEI_NUMBER_REGEX = "(^$|[0-9]{5,15})";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,16 +26,18 @@ public class PhysicalPhone {
     @NotNull
     @Column(unique = true, nullable = false, length = 15)
     @Size(min = 5, max = 15)
+    @Pattern(regexp = IMEI_NUMBER_REGEX)
     private String imei;
 
     private String color;
+
+    private Integer memorySize;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PhoneStatus phoneStatus;
 
-    private LocalDate manufacturerDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)

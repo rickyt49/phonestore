@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class Employee {
     private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +32,8 @@ public class Employee {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
+
+    @Email
     private String email;
 
     @NotNull

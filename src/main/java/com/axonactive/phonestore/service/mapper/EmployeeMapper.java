@@ -13,6 +13,7 @@ public interface EmployeeMapper {
 //    EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
 
     @Mapping(target = "fullName", expression = "java(employee.getFirstName() + \" \" + employee.getLastName())")
+    @Mapping(source = "employee.store.name",target = "storeName")
     EmployeeDto toDto(Employee employee);
 
     List<EmployeeDto> toDtos(List<Employee> employees);

@@ -32,7 +32,7 @@ public class EmployeeAccountResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeAccountDto> getEmployeeAccountById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<EmployeeAccountDto> findEmployeeAccountById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
         return ResponseEntity.ok(employeeAccountMapper.toDto(employeeAccountService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee Account not found: " + id))));
     }
 

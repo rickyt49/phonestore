@@ -29,7 +29,7 @@ public class OwnerResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OwnerDto> getOwnerById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<OwnerDto> findOwnerById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
         Owner owner = ownerService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Owner not found: " + id));
         return ResponseEntity.ok(ownerMapper.toDto(owner));
     }

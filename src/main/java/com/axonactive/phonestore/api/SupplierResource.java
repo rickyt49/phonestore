@@ -30,7 +30,7 @@ public class SupplierResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SupplierDto> getSupplierById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<SupplierDto> findSupplierById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
         return ResponseEntity.ok(supplierMapper.toDto(supplierService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + id))));
     }
 

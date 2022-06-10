@@ -13,7 +13,9 @@ public interface PhysicalPhoneMapper {
 //    PhysicalPhoneMapper INSTANCE = Mappers.getMapper(PhysicalPhoneMapper.class);
 
     @Mapping(source = "physicalPhone.specification.model", target = "model")
+    @Mapping(target = "memorySize", expression = "java(Integer.toString(physicalPhone.getMemorySize())+ \" GB\")")
     PhysicalPhoneDto toDto(PhysicalPhone physicalPhone);
+
 
     List<PhysicalPhoneDto> toDtos(List<PhysicalPhone> physicalPhones);
 }

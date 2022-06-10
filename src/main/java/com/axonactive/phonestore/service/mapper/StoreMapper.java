@@ -11,6 +11,8 @@ import java.util.List;
 public interface StoreMapper {
 //    StoreMapper INSTANCE = Mappers.getMapper(StoreMapper.class);
 
+
+
     StoreDto toDto(Store store);
 
     List<StoreDto> toDtos(List<Store> stores);
