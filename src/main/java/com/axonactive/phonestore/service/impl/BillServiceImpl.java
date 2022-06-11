@@ -1,8 +1,10 @@
 package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.entity.Bill;
+import com.axonactive.phonestore.entity.BillDetail;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.repository.BillRepository;
+import com.axonactive.phonestore.service.BillDetailService;
 import com.axonactive.phonestore.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.Optional;
 public class BillServiceImpl implements BillService {
     @Autowired
     BillRepository billRepository;
+
+    @Autowired
+    BillDetailService billDetailService;
 
     @Override
     public List<Bill> getAll() {
@@ -39,9 +44,19 @@ public class BillServiceImpl implements BillService {
     public Bill update(Integer id, Bill billDetails) throws ResourceNotFoundException {
         Bill updatedBill = billRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + id));
         updatedBill.setSaleDate(billDetails.getSaleDate());
-        updatedBill.setTotalSellPrice(billDetails.getTotalSellPrice());
         updatedBill.setCustomer(billDetails.getCustomer());
         updatedBill.setEmployee(billDetails.getEmployee());
         return billRepository.save(updatedBill);
+    }
+
+    public Integer updateTotalPrice(Integer billId) {
+        int total = 0;
+        List<BillDetail> billDetails = billDetailService.findByBillId(billId);
+        if (billDetails.size() == 0)
+            return 0;
+        for (BillDetail billDetail : billDetails) {
+            total += billDetail.getSellPrice();
+        }
+        return total;
     }
 }

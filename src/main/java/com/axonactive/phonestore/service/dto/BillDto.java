@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class BillDto {
+    private Integer id;
     private String employeeFullName;
     private String customerName;
     private LocalDate saleDate;

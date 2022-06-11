@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillRequest {
-    private Integer employeeId;
-    private Integer customerId;
+@Data
+public class BillDetailRequest {
+    private Integer billId;
+    private Integer phoneId;
+    private Integer sellPrice;
+    private Integer discountAmount;
 }

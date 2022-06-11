@@ -21,19 +21,19 @@ import java.util.List;
 public class PhysicalPhoneResource {
     public static final String PATH = "/api/phones";
     @Autowired
-    PhysicalPhoneService physicalPhoneService;
+    private PhysicalPhoneService physicalPhoneService;
 
     @Autowired
-    PhysicalPhoneMapper physicalPhoneMapper;
+    private PhysicalPhoneMapper physicalPhoneMapper;
 
     @Autowired
-    SupplierService supplierService;
+    private SupplierService supplierService;
 
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
 
     @Autowired
-    SpecificationService specificationService;
+    private SpecificationService specificationService;
 
     @GetMapping
     public ResponseEntity<List<PhysicalPhoneDto>> getAll() {

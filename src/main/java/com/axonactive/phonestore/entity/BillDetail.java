@@ -24,6 +24,8 @@ public class BillDetail {
     @Column(nullable = false)
     private Integer sellPrice;
 
+    private Integer finalSellPrice;
+
     @ManyToOne
     @JoinColumn(name = "physical_phone_id")
     private PhysicalPhone physicalPhone;

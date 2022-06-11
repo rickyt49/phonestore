@@ -18,10 +18,10 @@ import java.util.List;
 public class OwnerResource {
     public static final String PATH = "/api/owners";
     @Autowired
-    OwnerService ownerService;
+    private OwnerService ownerService;
 
     @Autowired
-    OwnerMapper ownerMapper;
+    private OwnerMapper ownerMapper;
 
     @GetMapping
     public ResponseEntity<List<OwnerDto>> getAll() {

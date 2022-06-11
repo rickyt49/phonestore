@@ -16,4 +16,6 @@ public interface BillDetailService {
     void delete(Integer id);
 
     BillDetail update(Integer id, BillDetail billDetailDetails) throws ResourceNotFoundException;
+
+    List<BillDetail> findByBillId(Integer id);
 }

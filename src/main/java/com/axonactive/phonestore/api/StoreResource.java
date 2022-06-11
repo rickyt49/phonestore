@@ -19,11 +19,11 @@ import java.util.List;
 public class StoreResource {
     public static final String PATH = "/api/stores";
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
     @Autowired
-    StoreMapper storeMapper;
+    private StoreMapper storeMapper;
     @Autowired
-    OwnerService ownerService;
+    private OwnerService ownerService;
 
     @GetMapping
     public ResponseEntity<List<StoreDto>> getAll() {

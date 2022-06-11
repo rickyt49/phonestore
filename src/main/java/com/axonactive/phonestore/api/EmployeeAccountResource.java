@@ -19,12 +19,12 @@ import java.util.List;
 public class EmployeeAccountResource {
     public static final String PATH = "/api/employeeaccounts";
     @Autowired
-    EmployeeAccountService employeeAccountService;
+    private EmployeeAccountService employeeAccountService;
     @Autowired
-    EmployeeAccountMapper employeeAccountMapper;
+    private EmployeeAccountMapper employeeAccountMapper;
 
     @Autowired
-    EmployeeService employeeService;
+    private EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeAccountDto>> getAll() {

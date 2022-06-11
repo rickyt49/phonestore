@@ -19,10 +19,10 @@ public class SupplierResource {
     public static final String PATH = "/api/suppliers";
 
     @Autowired
-    SupplierService supplierService;
+    private SupplierService supplierService;
 
     @Autowired
-    SupplierMapper supplierMapper;
+    private SupplierMapper supplierMapper;
 
     @GetMapping
     public ResponseEntity<List<SupplierDto>> getAll() {

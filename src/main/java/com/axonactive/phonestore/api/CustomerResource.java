@@ -19,9 +19,9 @@ public class CustomerResource {
     public static final String PATH = "/api/customers";
 
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
     @Autowired
-    CustomerMapper customerMapper;
+    private CustomerMapper customerMapper;
 
     @GetMapping
     public ResponseEntity<List<CustomerDto>> getAll() {

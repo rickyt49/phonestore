@@ -18,9 +18,9 @@ import java.util.List;
 public class SpecificationResource {
     public static final String PATH = "/api/specifications";
     @Autowired
-    SpecificationService specificationService;
+    private SpecificationService specificationService;
     @Autowired
-    SpecificationMapper specificationMapper;
+    private SpecificationMapper specificationMapper;
 
     @GetMapping
     public ResponseEntity<List<SpecificationDto>> getAll() {

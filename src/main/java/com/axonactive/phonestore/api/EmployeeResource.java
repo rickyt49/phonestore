@@ -20,12 +20,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class EmployeeResource {
     public static final String PATH = "/api/employees";
     @Autowired
-    EmployeeService employeeService;
+    private EmployeeService employeeService;
     @Autowired
-    EmployeeMapper employeeMapper;
+    private EmployeeMapper employeeMapper;
 
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {

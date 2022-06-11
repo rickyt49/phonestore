@@ -45,4 +45,12 @@ public class BillDetailServiceImpl implements BillDetailService {
 
         return billDetailRepository.save(updatedBillDetail);
     }
+
+    @Override
+    public List<BillDetail> findByBillId(Integer id) {
+        return billDetailRepository.findByBillId(id);
+    }
+
+
+
 }
