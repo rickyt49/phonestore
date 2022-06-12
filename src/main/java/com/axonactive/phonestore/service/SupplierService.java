@@ -16,4 +16,8 @@ public interface SupplierService {
     void delete(Integer id);
 
     Supplier update(Integer id, Supplier supplierDetails) throws ResourceNotFoundException;
+
+    List<Supplier> findByPhoneNumberContaining(String phoneNumber);
+
+    List<Supplier> findByFullNameContaining(String name);
 }

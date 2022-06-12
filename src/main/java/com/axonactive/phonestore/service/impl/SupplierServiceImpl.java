@@ -44,4 +44,14 @@ public class SupplierServiceImpl implements SupplierService {
         updatedSupplier.setPhoneNumber(supplierDetails.getPhoneNumber());
         return supplierRepository.save(updatedSupplier);
     }
+
+    @Override
+    public List<Supplier> findByPhoneNumberContaining(String phoneNumber) {
+        return supplierRepository.findByPhoneNumberContaining(phoneNumber);
+    }
+
+    @Override
+    public List<Supplier> findByFullNameContaining(String name) {
+        return supplierRepository.findByFullNameContaining(name);
+    }
 }

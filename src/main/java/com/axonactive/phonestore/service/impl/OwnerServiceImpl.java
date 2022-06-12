@@ -44,5 +44,15 @@ public class OwnerServiceImpl implements OwnerService {
         return ownerRepository.save(updatedOwner);
     }
 
+    @Override
+    public List<Owner> findByPhoneNumberContaining(String phoneNumber) {
+        return ownerRepository.findByPhoneNumberContaining(phoneNumber);
+    }
+
+    @Override
+    public List<Owner> findByFullNameContaining(String name) {
+        return ownerRepository.findByFullNameContaining(name);
+    }
+
 
 }

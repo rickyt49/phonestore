@@ -58,4 +58,14 @@ public class OwnerResource {
         updatedOwner.setPhoneNumber(ownerRequest.getPhoneNumber());
         return ResponseEntity.ok(ownerMapper.toDto(ownerService.update(id, updatedOwner)));
     }
+
+    @GetMapping
+    public ResponseEntity<List<OwnerDto>> findOwnerByPhoneNumber(@RequestParam("phonenumber") String phoneNumber) {
+        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.findByPhoneNumberContaining(phoneNumber)));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OwnerDto>> findOwnerByName(@RequestParam("name") String name) {
+        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.findByFullNameContaining(name)));
+    }
 }

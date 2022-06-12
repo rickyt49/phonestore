@@ -16,4 +16,8 @@ public interface OwnerService {
     void delete(Integer id);
 
     Owner update(Integer id, Owner ownerDetails) throws ResourceNotFoundException;
+
+    List<Owner> findByPhoneNumberContaining(String phoneNumber);
+
+    List<Owner> findByFullNameContaining(String name);
 }

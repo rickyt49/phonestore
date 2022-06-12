@@ -45,4 +45,14 @@ public class CustomerServiceImpl implements CustomerService {
         updatedCustomer.setPhoneNumber(customerDetails.getPhoneNumber());
         return customerRepository.save(updatedCustomer);
     }
+
+    @Override
+    public List<Customer> findByPhoneNumberContaining(String phoneNumber) {
+        return customerRepository.findByPhoneNumberContaining(phoneNumber);
+    }
+
+    @Override
+    public List<Customer> findByFullNameContaining(String name) {
+        return customerRepository.findByFullNameContaining(name);
+    }
 }

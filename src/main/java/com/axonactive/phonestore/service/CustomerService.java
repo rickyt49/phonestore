@@ -16,4 +16,8 @@ public interface CustomerService {
     void delete(Integer id);
 
     Customer update(Integer id, Customer customerDetails) throws ResourceNotFoundException;
+
+    List<Customer> findByPhoneNumberContaining(String phoneNumber);
+
+    List<Customer> findByFullNameContaining(String name);
 }
