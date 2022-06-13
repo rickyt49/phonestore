@@ -58,15 +58,15 @@ public class CustomerResource {
         return ResponseEntity.ok(customerMapper.toDto(customerService.update(id, updatedCustomer)));
     }
 
-    @GetMapping
-    public ResponseEntity<List<CustomerDto>> findCustomerByPhoneNumber(@RequestParam("phonenumber") String phoneNumber) {
-        return ResponseEntity.ok(customerMapper.toDtos(customerService.findByPhoneNumberContaining(phoneNumber)));
-    }
+//    @GetMapping("/where")
+//    public ResponseEntity<List<CustomerDto>> findCustomerByPhoneNumber(@RequestParam(value = "phonenumber") String phoneNumber) {
+//        return ResponseEntity.ok(customerMapper.toDtos(customerService.findByPhoneNumberContaining(phoneNumber)));
+//    }
 
-    @GetMapping
-    public ResponseEntity<List<CustomerDto>> findCustomerByFullName(@RequestParam("name") String name) {
-        return ResponseEntity.ok(customerMapper.toDtos(customerService.findByFullNameContaining(name)));
-    }
+//    @GetMapping("/where")
+//    public ResponseEntity<List<CustomerDto>> findCustomerByFullName(@RequestParam(value = "name") String name) {
+//        return ResponseEntity.ok(customerMapper.toDtos(customerService.findByFullNameContaining(name)));
+//    }
 
 
 }

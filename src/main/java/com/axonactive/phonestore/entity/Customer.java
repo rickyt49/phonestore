@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class Customer {
+    @Transient
     private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
 
     @Id

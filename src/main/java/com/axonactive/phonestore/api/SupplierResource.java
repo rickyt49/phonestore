@@ -59,12 +59,13 @@ public class SupplierResource {
         return ResponseEntity.ok(supplierMapper.toDto(supplierService.update(id, supplier)));
     }
 
-    @GetMapping
-    public ResponseEntity<List<SupplierDto>> findSupplierByPhoneNumber(@RequestParam("phonenumber") String phoneNumber) {
-        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.findByPhoneNumberContaining(phoneNumber)));
-    }
-
-    public ResponseEntity<List<SupplierDto>> findSupplierByFullName(@RequestParam("name") String name) {
-        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.findByFullNameContaining(name)));
-    }
+//    @GetMapping()
+//    public ResponseEntity<List<SupplierDto>> findSupplierByPhoneNumber(@RequestParam(value = "phonenumber") String phoneNumber) {
+//        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.findByPhoneNumberContaining(phoneNumber)));
+//    }
+//
+//    @GetMapping("/where")
+//    public ResponseEntity<List<SupplierDto>> findSupplierByFullName(@RequestParam("name") String name) {
+//        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.findByFullNameContaining(name)));
+//    }
 }

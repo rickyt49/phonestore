@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Entity
 public class Owner {
+    @Transient
     private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,7 @@ public class Owner {
     private String fullName;
 
     @NotNull
-    @Column(length = 10, nullable = false)
+    @Column(length = 10, nullable = false, unique = true)
     @Size(min = 10, max = 10)
     @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String phoneNumber;

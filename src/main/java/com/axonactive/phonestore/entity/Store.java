@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 public class Store {
+    @Transient
     private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

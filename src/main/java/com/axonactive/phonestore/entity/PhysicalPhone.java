@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class PhysicalPhone {
+    @Transient
     private final String IMEI_NUMBER_REGEX = "(^$|[0-9]{5,15})";
 
     @Id

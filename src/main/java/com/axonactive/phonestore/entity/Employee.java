@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Entity
 public class Employee {
+    @Transient
     private final String PHONE_NUMBER_REGEX = "(^$|[0-9]{10})";
 
 

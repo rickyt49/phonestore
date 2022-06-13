@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(OwnerResource.PATH)
@@ -59,13 +60,15 @@ public class OwnerResource {
         return ResponseEntity.ok(ownerMapper.toDto(ownerService.update(id, updatedOwner)));
     }
 
-    @GetMapping
-    public ResponseEntity<List<OwnerDto>> findOwnerByPhoneNumber(@RequestParam("phonenumber") String phoneNumber) {
-        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.findByPhoneNumberContaining(phoneNumber)));
-    }
+//    @GetMapping("/search/")
+//    public ResponseEntity<List<OwnerDto>> findOwnerByPhoneNumber(@RequestParam Map<String, String> allRequestParam) {
+//        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.findByPhoneNumberContaining(phoneNumber)));
+//    }
 
-    @GetMapping
-    public ResponseEntity<List<OwnerDto>> findOwnerByName(@RequestParam("name") String name) {
-        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.findByFullNameContaining(name)));
-    }
+//    @GetMapping
+//    public ResponseEntity<List<OwnerDto>> findOwnerByName(@RequestParam("name") String name) {
+//        return ResponseEntity.ok(ownerMapper.toDtos(ownerService.findByFullNameContaining(name)));
+//    }
+
+
 }

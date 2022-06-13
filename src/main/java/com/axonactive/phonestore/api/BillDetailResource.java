@@ -48,6 +48,7 @@ public class BillDetailResource {
         billDetail.setDiscountAmount(billDetailRequest.getDiscountAmount());
         billDetail.setFinalSellPrice(billDetailRequest.getSellPrice() - billDetailRequest.getDiscountAmount());
         BillDetail createdBillDetail = billDetailService.save(billDetail);
+
         return ResponseEntity.created(URI.create(BillDetailResource.PATH + "/" + createdBillDetail.getId())).body(billDetailMapper.toDto(createdBillDetail));
     }
 
