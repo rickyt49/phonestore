@@ -42,7 +42,7 @@ public class BillDetailServiceImpl implements BillDetailService {
         updatedBillDetail.setSellPrice(billDetailDetails.getSellPrice());
         updatedBillDetail.setDiscountAmount(billDetailDetails.getDiscountAmount());
         updatedBillDetail.setBill(billDetailDetails.getBill());
-
+        updatedBillDetail.setFinalSellPrice(billDetailDetails.getFinalSellPrice());
         return billDetailRepository.save(updatedBillDetail);
     }
 
@@ -50,7 +50,5 @@ public class BillDetailServiceImpl implements BillDetailService {
     public List<BillDetail> findByBillId(Integer id) {
         return billDetailRepository.findByBillId(id);
     }
-
-
 
 }

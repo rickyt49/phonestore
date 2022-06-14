@@ -4,7 +4,6 @@ import com.axonactive.phonestore.entity.Specification;
 import com.axonactive.phonestore.service.dto.SpecificationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -15,6 +14,8 @@ public interface SpecificationMapper {
     @Mapping(target = "ram", expression = "java( Integer.toString(specification.getRam()) + \" GB\")")
 
     @Mapping(target = "batteryCapacity", expression = "java(Integer.toString(specification.getBatteryCapacity())+ \" mAh\")")
+
+    @Mapping(target = "screen", expression = "java(specification.getScreenType() + \", \" +specification.getScreenResolution())")
     SpecificationDto toDto(Specification specification);
 
     List<SpecificationDto> toDtos(List<Specification> specifications);

@@ -1,6 +1,5 @@
 package com.axonactive.phonestore.service.dto;
 
-import com.axonactive.phonestore.entity.Employee;
 import com.axonactive.phonestore.entity.EmployeeStatus;
 import com.axonactive.phonestore.entity.EmployeeType;
 import com.axonactive.phonestore.entity.Gender;
@@ -18,5 +17,5 @@ public class EmployeeDto {
     private String address;
     private EmployeeType employeeType;
     private EmployeeStatus employeeStatus;
-    private Integer storeName;
+    private String storeName;
 }

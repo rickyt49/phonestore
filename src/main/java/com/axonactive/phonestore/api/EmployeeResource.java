@@ -43,13 +43,13 @@ public class EmployeeResource {
         return ResponseEntity.created(URI.create(EmployeeResource.PATH + "/" + createdEmployee.getId())).body(employeeMapper.toDto(createdEmployee));
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        storeService.delete(id);
+        employeeService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Integer id, @RequestBody EmployeeRequest employeeRequest) throws ResourceNotFoundException {
         Employee updatedEmployee = employeeService.update(id, new Employee(
                 null,

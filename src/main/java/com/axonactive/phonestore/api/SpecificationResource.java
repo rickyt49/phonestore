@@ -46,6 +46,7 @@ public class SpecificationResource {
         specification.setBatteryCapacity(specificationRequest.getBatteryCapacity());
         specification.setManufacturer(specificationRequest.getManufacturer());
         specification.setSelfieCamera(specificationRequest.getSelfieCamera());
+        specification.setManufacturerStatus(specificationRequest.getManufacturerStatus());
         Specification createdSpecification = specificationService.save(specification);
         return ResponseEntity.created(URI.create(SpecificationResource.PATH + "/" + createdSpecification.getId())).body(specificationMapper.toDto(createdSpecification));
     }
@@ -64,6 +65,13 @@ public class SpecificationResource {
         updatedSpecification.setBatteryCapacity(specificationRequest.getBatteryCapacity());
         updatedSpecification.setManufacturer(specificationRequest.getManufacturer());
         updatedSpecification.setSelfieCamera(specificationRequest.getSelfieCamera());
+        updatedSpecification.setManufacturerStatus(specificationRequest.getManufacturerStatus());
         return ResponseEntity.ok(specificationMapper.toDto(specificationService.update(id, updatedSpecification)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) {
+        specificationService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
