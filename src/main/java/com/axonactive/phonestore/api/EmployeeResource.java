@@ -3,15 +3,21 @@ package com.axonactive.phonestore.api;
 import com.axonactive.phonestore.api.request.EmployeeRequest;
 import com.axonactive.phonestore.entity.Employee;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.BillDetailService;
+import com.axonactive.phonestore.service.BillService;
 import com.axonactive.phonestore.service.EmployeeService;
 import com.axonactive.phonestore.service.StoreService;
+import com.axonactive.phonestore.service.dto.BillDto;
 import com.axonactive.phonestore.service.dto.EmployeeDto;
+import com.axonactive.phonestore.service.mapper.BillDetailMapper;
+import com.axonactive.phonestore.service.mapper.BillMapper;
 import com.axonactive.phonestore.service.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -25,7 +31,17 @@ public class EmployeeResource {
     private EmployeeMapper employeeMapper;
 
     @Autowired
+    private BillMapper billMapper;
+
+    @Autowired
+    private BillDetailMapper billDetailMapper;
+    @Autowired
+    private BillDetailService billDetailService;
+    @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private BillService billService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {
@@ -64,5 +80,35 @@ public class EmployeeResource {
                 employeeRequest.getManagerId(),
                 storeService.findById(employeeRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + employeeRequest.getStoreId()))));
         return ResponseEntity.ok(employeeMapper.toDto(updatedEmployee));
+    }
+
+    @GetMapping("/{id}/bills")
+    public ResponseEntity<List<BillDto>> getBillByEmployeeAndSaleDate(@PathVariable(value = "id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
+        if (startDate == null && endDate != null) {
+            List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeIdAndSaleDateBefore(id, LocalDate.parse(endDate)));
+            for (BillDto billDto : resultList) {
+                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+            }
+            return ResponseEntity.ok(resultList);
+        }
+        if (endDate == null && startDate != null) {
+            List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeIdAndSaleDateAfter(id, LocalDate.parse(startDate)));
+            for (BillDto billDto : resultList) {
+                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+            }
+            return ResponseEntity.ok(resultList);
+        }
+        if (startDate == null) {
+            List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeId(id));
+            for (BillDto billDto : resultList) {
+                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+            }
+            return ResponseEntity.ok(resultList);
+        }
+        List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeIdAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
+        for (BillDto billDto : resultList) {
+            billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+        }
+        return ResponseEntity.ok(resultList);
     }
 }

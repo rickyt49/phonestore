@@ -53,7 +53,7 @@ public class BillDetailResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
         billDetailService.delete(id);
         return ResponseEntity.noContent().build();
     }

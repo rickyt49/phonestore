@@ -59,6 +59,7 @@ public class BillResource {
         Bill bill = new Bill();
         bill.setCustomer(customerService.findById(billRequest.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found! " + billRequest.getCustomerId())));
         bill.setEmployee(employeeService.findById(billRequest.getEmployeeId()).orElseThrow(() -> new ResourceNotFoundException("Employee not found! " + billRequest.getEmployeeId())));
+        bill.setTotalSellPrice(0);
         Bill createdBill = billService.save(bill);
         return ResponseEntity.created(URI.create(BillResource.PATH + "/" + createdBill.getId())).body(billMapper.toDto(createdBill));
     }

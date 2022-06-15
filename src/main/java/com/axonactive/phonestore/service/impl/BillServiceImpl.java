@@ -9,6 +9,7 @@ import com.axonactive.phonestore.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,14 +50,26 @@ public class BillServiceImpl implements BillService {
         return billRepository.save(updatedBill);
     }
 
-    public Integer updateTotalPrice(Integer billId) {
-        int total = 0;
-        List<BillDetail> billDetails = billDetailService.findByBillId(billId);
-        if (billDetails.size() == 0)
-            return 0;
-        for (BillDetail billDetail : billDetails) {
-            total += billDetail.getSellPrice();
-        }
-        return total;
+    @Override
+    public List<Bill> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate) {
+        return billRepository.findByEmployeeIdAndSaleDateBetween(id, startDate, endDate);
     }
+
+    @Override
+    public List<Bill> findByEmployeeId(Integer id) {
+        return billRepository.findByEmployeeId(id);
+    }
+
+    @Override
+    public List<Bill> findByEmployeeIdAndSaleDateBefore(Integer id, LocalDate endDate) {
+        return billRepository.findByEmployeeIdAndSaleDateBefore(id, endDate);
+    }
+
+    @Override
+    public List<Bill> findByEmployeeIdAndSaleDateAfter(Integer id,LocalDate startDate) {
+        return billRepository.findByEmployeeIdAndSaleDateAfter(id,startDate);
+    }
+
+
+
 }

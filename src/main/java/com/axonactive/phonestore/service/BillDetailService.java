@@ -11,9 +11,9 @@ public interface BillDetailService {
 
     Optional<BillDetail> findById(Integer id);
 
-    BillDetail save(BillDetail billDetail);
+    BillDetail save(BillDetail billDetail) throws ResourceNotFoundException;
 
-    void delete(Integer id);
+    void delete(Integer id) throws ResourceNotFoundException;
 
     BillDetail update(Integer id, BillDetail billDetailDetails) throws ResourceNotFoundException;
 
