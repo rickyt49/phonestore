@@ -32,9 +32,7 @@ public class BillDetailServiceImpl implements BillDetailService {
     @Override
     public BillDetail save(BillDetail billDetail) throws ResourceNotFoundException {
         BillDetail createdBillDetail = billDetailRepository.save(billDetail);
-        Bill bill = billRepository.findById(billDetail.getBill().getId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found" + billDetail.getBill().getId()));
-        bill.setTotalSellPrice(bill.getTotalSellPrice() + createdBillDetail.getFinalSellPrice());
-        billRepository.save(bill);
+        updateTotalPrice(billDetail);
         return createdBillDetail;
     }
 
@@ -42,9 +40,7 @@ public class BillDetailServiceImpl implements BillDetailService {
     public void delete(Integer id) throws ResourceNotFoundException {
         BillDetail billDetail = billDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill Detail not found " + id));
         billDetailRepository.deleteById(id);
-        Bill bill = billRepository.findById(billDetail.getBill().getId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found" + billDetail.getBill().getId()));
-        bill.setTotalSellPrice(updateTotalPrice(bill.getId()));
-        billRepository.save(bill);
+        updateTotalPrice(billDetail);
     }
 
     @Override
@@ -54,7 +50,7 @@ public class BillDetailServiceImpl implements BillDetailService {
         updatedBillDetail.setSellPrice(billDetailDetails.getSellPrice());
         updatedBillDetail.setDiscountAmount(billDetailDetails.getDiscountAmount());
         updatedBillDetail.setFinalSellPrice(billDetailDetails.getFinalSellPrice());
-
+        updateTotalPrice(updatedBillDetail);
         return billDetailRepository.save(updatedBillDetail);
     }
 
@@ -63,16 +59,12 @@ public class BillDetailServiceImpl implements BillDetailService {
         return billDetailRepository.findByBillId(id);
     }
 
-    public Integer updateTotalPrice(Integer billId) {
 
-        int total = 0;
-        List<BillDetail> billDetails = billDetailRepository.findByBillId(billId);
-        if (billDetails.size() == 0)
-            return 0;
-        for (BillDetail billDetail : billDetails) {
-            total += billDetail.getFinalSellPrice();
-        }
-        return total;
+
+    public void updateTotalPrice(BillDetail billDetail) throws ResourceNotFoundException {
+        Bill bill = billRepository.findById(billDetail.getBill().getId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found" + billDetail.getBill().getId()));
+        bill.setTotalSellPrice(billDetailRepository.sumSellPriceByBillId(billDetail.getBill().getId()));
+        billRepository.save(bill);
     }
 
 }

@@ -43,4 +43,9 @@ public class EmployeeAccountServiceImpl implements EmployeeAccountService {
         updatedEmployeeAccount.setPassword(employeeAccountDetails.getPassword());
         return employeeAccountRepository.save(updatedEmployeeAccount);
     }
+
+    @Override
+    public Optional<EmployeeAccount> findByUsername(String username) {
+        return employeeAccountRepository.findByUsername(username);
+    }
 }

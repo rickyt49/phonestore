@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class BillDetailRequest {
-    private Integer billId;
+public class BillUpdateRequest {
     private String Imei;
+
     @Min(value = 0, message = "Sell price must be positive")
     private Integer sellPrice;
     @Min(value = 0, message = "Discount amount must be positive")

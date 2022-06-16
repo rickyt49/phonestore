@@ -47,4 +47,19 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
         updatedPhysicalPhone.setImportDate(physicalPhoneDetails.getImportDate());
         return physicalPhoneRepository.save(updatedPhysicalPhone);
     }
+
+    @Override
+    public Optional<PhysicalPhone> findByImei(String imei) {
+        return physicalPhoneRepository.findByImei(imei);
+    }
+
+    @Override
+    public List<PhysicalPhone> findAllAvailablePhone() {
+        return physicalPhoneRepository.findAllAvailablePhone();
+    }
+
+    @Override
+    public List<PhysicalPhone> findAllAvailablePhoneByStore(Integer storeId) {
+        return physicalPhoneRepository.findAllAvailablePhoneByStore(storeId);
+    }
 }

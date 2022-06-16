@@ -16,4 +16,11 @@ public interface PhysicalPhoneService {
     void delete(Integer id);
 
     PhysicalPhone update(Integer id, PhysicalPhone physicalPhoneDetails) throws ResourceNotFoundException;
+
+    Optional<PhysicalPhone> findByImei(String imei);
+
+    List<PhysicalPhone> findAllAvailablePhone();
+
+    List<PhysicalPhone> findAllAvailablePhoneByStore(Integer storeId);
+
 }

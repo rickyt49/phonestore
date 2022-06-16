@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Entity
 public class PhysicalPhone {
     @Transient
-    private final String IMEI_NUMBER_REGEX = "(^$|[0-9]{5,15})";
+    private final String IMEI_NUMBER_REGEX = "(^$|[0-9]{15})";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,8 @@ public class PhysicalPhone {
 
     @NotNull
     @Column(unique = true, nullable = false, length = 15)
-    @Size(min = 5, max = 15)
-    @Pattern(regexp = IMEI_NUMBER_REGEX)
+    @Size(min = 15, max = 15)
+    @Pattern(regexp = IMEI_NUMBER_REGEX, message = "IMEI number must have 15 numbers")
     private String imei;
 
     private String color;
@@ -56,7 +56,8 @@ public class PhysicalPhone {
     private LocalDate importDate;
 
     @ManyToOne
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "store_id", nullable = false)
+    @NotNull
     private Store store;
 
     @ManyToOne

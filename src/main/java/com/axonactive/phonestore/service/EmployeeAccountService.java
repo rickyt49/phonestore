@@ -17,4 +17,6 @@ public interface EmployeeAccountService {
 
     EmployeeAccount update(Integer id, EmployeeAccount employeeAccountDetails) throws ResourceNotFoundException;
 
+    Optional<EmployeeAccount> findByUsername(String username);
+
 }

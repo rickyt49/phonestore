@@ -18,4 +18,5 @@ public interface BillDetailService {
     BillDetail update(Integer id, BillDetail billDetailDetails) throws ResourceNotFoundException;
 
     List<BillDetail> findByBillId(Integer id);
+
 }

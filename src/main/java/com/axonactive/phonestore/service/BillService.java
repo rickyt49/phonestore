@@ -2,6 +2,7 @@ package com.axonactive.phonestore.service;
 
 import com.axonactive.phonestore.entity.Bill;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,4 +26,23 @@ public interface BillService {
     List<Bill> findByEmployeeIdAndSaleDateBefore(Integer id, LocalDate endDate);
 
     List<Bill> findByEmployeeIdAndSaleDateAfter(Integer id, LocalDate startDate);
+
+    List<Bill> findAllBillByStore(Integer storeId);
+
+    List<Bill> findAllBillByStoreAndSaleDateAfter(Integer storeId, LocalDate startDate);
+
+    List<Bill> findAllBillByStoreAndSaleDateBefore(Integer storeId, LocalDate endDate);
+
+    List<Bill> findAllBillByStoreAndSaleDateBetween(Integer storeId, LocalDate startDate, LocalDate endDate);
+
+
+    Integer getTotalGrossProfit(Integer storeId);
+
+    Integer getTotalGrossProfitAfter(Integer storeId, LocalDate startDate);
+
+    Integer getTotalGrossProfitBefore(Integer storeId, LocalDate endDate);
+
+    Integer getTotalGrossProfitBetween(Integer storeId, LocalDate startDate, LocalDate endDate);
+
+
 }

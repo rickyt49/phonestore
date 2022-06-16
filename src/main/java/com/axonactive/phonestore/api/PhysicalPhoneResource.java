@@ -88,4 +88,9 @@ public class PhysicalPhoneResource {
         ));
         return ResponseEntity.ok(physicalPhoneMapper.toDto(updatedPhone));
     }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<PhysicalPhoneDto>> getAvailablePhone() {
+        return ResponseEntity.ok(physicalPhoneMapper.toDtos(physicalPhoneService.findAllAvailablePhone()));
+    }
 }

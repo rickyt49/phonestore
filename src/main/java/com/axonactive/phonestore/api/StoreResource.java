@@ -1,17 +1,23 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.StoreRequest;
+import com.axonactive.phonestore.entity.Bill;
 import com.axonactive.phonestore.entity.Store;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
-import com.axonactive.phonestore.service.OwnerService;
-import com.axonactive.phonestore.service.StoreService;
+import com.axonactive.phonestore.service.*;
+import com.axonactive.phonestore.service.dto.BillDto;
+import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import com.axonactive.phonestore.service.dto.StoreDto;
+import com.axonactive.phonestore.service.mapper.BillDetailMapper;
+import com.axonactive.phonestore.service.mapper.BillMapper;
+import com.axonactive.phonestore.service.mapper.PhysicalPhoneMapper;
 import com.axonactive.phonestore.service.mapper.StoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,7 +31,23 @@ public class StoreResource {
     @Autowired
     private OwnerService ownerService;
 
+    @Autowired
+    private PhysicalPhoneService physicalPhoneService;
+
+    @Autowired
+    private PhysicalPhoneMapper physicalPhoneMapper;
+
+    @Autowired
+    private BillService billService;
+    @Autowired
+    private BillMapper billMapper;
+    @Autowired
+    private BillDetailMapper billDetailMapper;
+    @Autowired
+    private BillDetailService billDetailService;
+
     @GetMapping
+
     public ResponseEntity<List<StoreDto>> getAll() {
         return ResponseEntity.ok(storeMapper.toDtos(storeService.getAll()));
     }
@@ -53,4 +75,56 @@ public class StoreResource {
         return ResponseEntity.ok(storeMapper.toDto(updatedStore));
     }
 
+    @GetMapping("/{id}/availablephones")
+    public ResponseEntity<List<PhysicalPhoneDto>> getAllAvailablePhoneInStore(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(physicalPhoneMapper.toDtos(physicalPhoneService.findAllAvailablePhoneByStore(id)));
+    }
+
+    @GetMapping("/{id}/bills")
+    public ResponseEntity<List<BillDto>> getAllBillByStore(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) throws ResourceNotFoundException {
+        if (startDate == null && endDate == null) {
+            List<Bill> bills = billService.findAllBillByStore(id);
+            List<BillDto> billDtos = billMapper.toDtos(bills);
+            for (BillDto billDto : billDtos) {
+                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+            }
+            return ResponseEntity.ok(billDtos);
+        }
+        if (startDate == null) {
+            List<Bill> bills = billService.findByEmployeeIdAndSaleDateBefore(id, LocalDate.parse(endDate));
+            List<BillDto> billDtos = billMapper.toDtos(bills);
+            for (BillDto billDto : billDtos) {
+                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+            }
+            return ResponseEntity.ok(billDtos);
+        }
+        if (endDate == null) {
+            List<Bill> bills = billService.findAllBillByStoreAndSaleDateAfter(id, LocalDate.parse(startDate));
+            List<BillDto> billDtos = billMapper.toDtos(bills);
+            for (BillDto billDto : billDtos) {
+                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+            }
+            return ResponseEntity.ok(billDtos);
+        }
+        List<Bill> bills = billService.findByEmployeeIdAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate));
+        List<BillDto> billDtos = billMapper.toDtos(bills);
+        for (BillDto billDto : billDtos) {
+            billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
+        }
+        return ResponseEntity.ok(billDtos);
+    }
+
+    @GetMapping("/{id}/profit")
+    public Integer getGrossProfit(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
+        if (startDate == null && endDate == null) {
+            return billService.getTotalGrossProfit(id);
+        }
+        if (startDate == null) {
+            return billService.getTotalGrossProfitBefore(id, LocalDate.parse(endDate));
+        }
+        if (endDate == null) {
+            return billService.getTotalGrossProfitAfter(id, LocalDate.parse(startDate));
+        }
+        return billService.getTotalGrossProfitBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
 }

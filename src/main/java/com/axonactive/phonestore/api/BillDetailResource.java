@@ -1,6 +1,7 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.BillDetailRequest;
+import com.axonactive.phonestore.api.request.BillUpdateRequest;
 import com.axonactive.phonestore.entity.BillDetail;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.service.BillDetailService;
@@ -43,7 +44,7 @@ public class BillDetailResource {
     public ResponseEntity<BillDetailDto> add(@RequestBody BillDetailRequest billDetailRequest) throws ResourceNotFoundException {
         BillDetail billDetail = new BillDetail();
         billDetail.setBill(billService.findById(billDetailRequest.getBillId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + billDetailRequest.getBillId())));
-        billDetail.setPhysicalPhone(physicalPhoneService.findById(billDetailRequest.getPhoneId()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + billDetailRequest.getPhoneId())));
+        billDetail.setPhysicalPhone(physicalPhoneService.findByImei(billDetailRequest.getImei()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + billDetailRequest.getImei())));
         billDetail.setSellPrice(billDetailRequest.getSellPrice());
         billDetail.setDiscountAmount(billDetailRequest.getDiscountAmount());
         billDetail.setFinalSellPrice(billDetailRequest.getSellPrice() - billDetailRequest.getDiscountAmount());
@@ -59,13 +60,12 @@ public class BillDetailResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BillDetailDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillDetailRequest billDetailRequest) throws ResourceNotFoundException {
+    public ResponseEntity<BillDetailDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillUpdateRequest BillUpdateRequest) throws ResourceNotFoundException {
         BillDetail updatedBillDetail = new BillDetail();
-        updatedBillDetail.setBill(billService.findById(billDetailRequest.getBillId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + billDetailRequest.getBillId())));
-        updatedBillDetail.setPhysicalPhone(physicalPhoneService.findById(billDetailRequest.getPhoneId()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + billDetailRequest.getPhoneId())));
-        updatedBillDetail.setSellPrice(billDetailRequest.getSellPrice());
-        updatedBillDetail.setDiscountAmount(billDetailRequest.getDiscountAmount());
-        updatedBillDetail.setFinalSellPrice(billDetailRequest.getSellPrice() - billDetailRequest.getDiscountAmount());
+        updatedBillDetail.setPhysicalPhone(physicalPhoneService.findByImei(BillUpdateRequest.getImei()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + BillUpdateRequest.getImei())));
+        updatedBillDetail.setSellPrice(BillUpdateRequest.getSellPrice());
+        updatedBillDetail.setDiscountAmount(BillUpdateRequest.getDiscountAmount());
+        updatedBillDetail.setFinalSellPrice(BillUpdateRequest.getSellPrice() - BillUpdateRequest.getDiscountAmount());
         return ResponseEntity.ok(billDetailMapper.toDto(billDetailService.update(id, updatedBillDetail)));
     }
 }

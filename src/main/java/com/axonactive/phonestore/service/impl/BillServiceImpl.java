@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+
+
 public class BillServiceImpl implements BillService {
     @Autowired
     BillRepository billRepository;
@@ -66,10 +68,49 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<Bill> findByEmployeeIdAndSaleDateAfter(Integer id,LocalDate startDate) {
-        return billRepository.findByEmployeeIdAndSaleDateAfter(id,startDate);
+    public List<Bill> findByEmployeeIdAndSaleDateAfter(Integer id, LocalDate startDate) {
+        return billRepository.findByEmployeeIdAndSaleDateAfter(id, startDate);
     }
 
+    @Override
+    public List<Bill> findAllBillByStore(Integer storeId) {
+        return billRepository.findAllBillByStore(storeId);
+    }
+
+    @Override
+    public List<Bill> findAllBillByStoreAndSaleDateAfter(Integer storeId, LocalDate startDate) {
+        return billRepository.findAllBillByStoreAndSaleDateAfter(storeId, startDate);
+    }
+
+    @Override
+    public List<Bill> findAllBillByStoreAndSaleDateBefore(Integer storeId, LocalDate endDate) {
+        return billRepository.findAllBillByStoreAndSaleDateBefore(storeId, endDate);
+    }
+
+    @Override
+    public List<Bill> findAllBillByStoreAndSaleDateBetween(Integer storeId, LocalDate startDate, LocalDate endDate) {
+        return billRepository.findAllBillByStoreAndSaleDateBetween(storeId, startDate, endDate);
+    }
+
+    @Override
+    public Integer getTotalGrossProfit(Integer storeId) {
+        return billRepository.getTotalGrossProfit(storeId);
+    }
+
+    @Override
+    public Integer getTotalGrossProfitAfter(Integer storeId, LocalDate startDate) {
+        return billRepository.getTotalGrossProfitAfter(storeId, startDate);
+    }
+
+    @Override
+    public Integer getTotalGrossProfitBefore(Integer storeId, LocalDate endDate) {
+        return billRepository.getTotalGrossProfitBefore(storeId, endDate);
+    }
+
+    @Override
+    public Integer getTotalGrossProfitBetween(Integer storeId, LocalDate startDate, LocalDate endDate) {
+        return billRepository.getTotalGrossProfitBetween(storeId, startDate, endDate);
+    }
 
 
 }
