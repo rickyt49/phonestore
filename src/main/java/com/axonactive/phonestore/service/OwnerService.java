@@ -1,21 +1,22 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.OwnerRequest;
 import com.axonactive.phonestore.entity.Owner;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.OwnerDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OwnerService {
-    List<Owner> getAll();
+    List<OwnerDto> getAll();
 
-    Optional<Owner> findById(Integer id);
+    OwnerDto findById(Integer id) throws ResourceNotFoundException;
 
-    Owner save(Owner owner);
+    OwnerDto save(OwnerRequest ownerRequest);
 
     void delete(Integer id);
 
-    Owner update(Integer id, Owner ownerDetails) throws ResourceNotFoundException;
+    OwnerDto update(Integer id, OwnerRequest ownerRequest) throws ResourceNotFoundException;
 
     List<Owner> findByPhoneNumberContaining(String phoneNumber);
 

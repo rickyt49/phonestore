@@ -1,19 +1,20 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.SpecificationRequest;
 import com.axonactive.phonestore.entity.Specification;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.SpecificationDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SpecificationService {
-    List<Specification> getAll();
+    List<SpecificationDto> getAll();
 
-    Optional<Specification> findById(Integer id);
+    SpecificationDto findById(Integer id) throws ResourceNotFoundException;
 
-    Specification save(Specification specification);
+    SpecificationDto save(SpecificationRequest specification);
 
     void delete(Integer id);
 
-    Specification update(Integer id, Specification specificationDetails) throws ResourceNotFoundException;
+    SpecificationDto update(Integer id, SpecificationRequest specificationRequest) throws ResourceNotFoundException;
 }

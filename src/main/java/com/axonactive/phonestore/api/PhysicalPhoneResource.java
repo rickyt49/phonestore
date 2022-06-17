@@ -1,12 +1,8 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.PhysicalPhoneRequest;
-import com.axonactive.phonestore.entity.PhysicalPhone;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.service.PhysicalPhoneService;
-import com.axonactive.phonestore.service.SpecificationService;
-import com.axonactive.phonestore.service.StoreService;
-import com.axonactive.phonestore.service.SupplierService;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import com.axonactive.phonestore.service.mapper.PhysicalPhoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,42 +22,21 @@ public class PhysicalPhoneResource {
     @Autowired
     private PhysicalPhoneMapper physicalPhoneMapper;
 
-    @Autowired
-    private SupplierService supplierService;
-
-    @Autowired
-    private StoreService storeService;
-
-    @Autowired
-    private SpecificationService specificationService;
 
     @GetMapping
     public ResponseEntity<List<PhysicalPhoneDto>> getAll() {
-        return ResponseEntity.ok(physicalPhoneMapper.toDtos(physicalPhoneService.getAll()));
+        return ResponseEntity.ok(physicalPhoneService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(physicalPhoneMapper.toDto(physicalPhoneService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + id))));
+        return ResponseEntity.ok(physicalPhoneService.findById(id));
     }
 
     @PostMapping
     public ResponseEntity<PhysicalPhoneDto> add(@RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws ResourceNotFoundException {
-        PhysicalPhone addedPhone = physicalPhoneService.save(new PhysicalPhone(
-                null,
-                physicalPhoneRequest.getImei(),
-                physicalPhoneRequest.getColor(),
-                physicalPhoneRequest.getMemorySize(),
-                physicalPhoneRequest.getPhoneStatus(),
-                physicalPhoneRequest.getCondition(),
-                physicalPhoneRequest.getWarranty(),
-                physicalPhoneRequest.getImportPrice(),
-                physicalPhoneRequest.getImportDate(),
-                storeService.findById(physicalPhoneRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + physicalPhoneRequest.getStoreId())),
-                supplierService.findById(physicalPhoneRequest.getSupplierId()).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + physicalPhoneRequest.getSupplierId())),
-                specificationService.findById(physicalPhoneRequest.getSpecificationId()).orElseThrow(() -> new ResourceNotFoundException("Specification not found: " + physicalPhoneRequest.getSpecificationId()))
-        ));
-        return ResponseEntity.created(URI.create(PhysicalPhoneResource.PATH + "/" + addedPhone.getId())).body(physicalPhoneMapper.toDto(addedPhone));
+        PhysicalPhoneDto addedPhone = physicalPhoneService.save(physicalPhoneRequest);
+        return ResponseEntity.created(URI.create(PhysicalPhoneResource.PATH + "/" + addedPhone.getId())).body(addedPhone);
     }
 
     @DeleteMapping("/{id}")
@@ -72,25 +47,11 @@ public class PhysicalPhoneResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<PhysicalPhoneDto> update(@PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws ResourceNotFoundException {
-        PhysicalPhone updatedPhone = physicalPhoneService.update(id, new PhysicalPhone(
-                null,
-                physicalPhoneRequest.getImei(),
-                physicalPhoneRequest.getColor(),
-                physicalPhoneRequest.getMemorySize(),
-                physicalPhoneRequest.getPhoneStatus(),
-                physicalPhoneRequest.getCondition(),
-                physicalPhoneRequest.getWarranty(),
-                physicalPhoneRequest.getImportPrice(),
-                physicalPhoneRequest.getImportDate(),
-                storeService.findById(physicalPhoneRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + physicalPhoneRequest.getStoreId())),
-                supplierService.findById(physicalPhoneRequest.getSupplierId()).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + physicalPhoneRequest.getSupplierId())),
-                specificationService.findById(physicalPhoneRequest.getSpecificationId()).orElseThrow(() -> new ResourceNotFoundException("Specification not found: " + physicalPhoneRequest.getSpecificationId()))
-        ));
-        return ResponseEntity.ok(physicalPhoneMapper.toDto(updatedPhone));
+        return ResponseEntity.ok(physicalPhoneService.update(id, physicalPhoneRequest));
     }
 
     @GetMapping("/available")
     public ResponseEntity<List<PhysicalPhoneDto>> getAvailablePhone() {
-        return ResponseEntity.ok(physicalPhoneMapper.toDtos(physicalPhoneService.findAllAvailablePhone()));
+        return ResponseEntity.ok(physicalPhoneService.findAllAvailablePhone());
     }
 }

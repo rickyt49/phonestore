@@ -1,19 +1,20 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.EmployeeRequest;
 import com.axonactive.phonestore.entity.Employee;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.EmployeeDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface EmployeeService {
-    List<Employee> getAll();
+    List<EmployeeDto> getAll();
 
-    Optional<Employee> findById(Integer id);
+    EmployeeDto findById(Integer id) throws ResourceNotFoundException;
 
-    Employee save(Employee employee);
+    EmployeeDto save(EmployeeRequest employeeRequest) throws ResourceNotFoundException;
 
     void delete(Integer id);
 
-    Employee update(Integer id, Employee employeeDetails) throws ResourceNotFoundException;
+    EmployeeDto update(Integer id, EmployeeRequest employeeRequest) throws ResourceNotFoundException;
 }

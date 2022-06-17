@@ -1,34 +1,42 @@
 package com.axonactive.phonestore.service.impl;
 
-import com.axonactive.phonestore.entity.Owner;
+import com.axonactive.phonestore.api.request.SupplierRequest;
 import com.axonactive.phonestore.entity.Supplier;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.repository.SupplierRepository;
 import com.axonactive.phonestore.service.SupplierService;
+import com.axonactive.phonestore.service.dto.SupplierDto;
+import com.axonactive.phonestore.service.mapper.SupplierMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
     @Autowired
     SupplierRepository supplierRepository;
 
+    @Autowired
+    private SupplierMapper supplierMapper;
+
     @Override
-    public List<Supplier> getAll() {
-        return supplierRepository.findAll();
+    public List<SupplierDto> getAll() {
+        return supplierMapper.toDtos(supplierRepository.findAll());
     }
 
     @Override
-    public Optional<Supplier> findById(Integer id) {
-        return supplierRepository.findById(id);
+    public SupplierDto findById(Integer id) throws ResourceNotFoundException {
+        return supplierMapper.toDto(supplierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + id)));
     }
 
     @Override
-    public Supplier save(Supplier owner) {
-        return supplierRepository.save(owner);
+    public SupplierDto save(SupplierRequest supplierRequest) {
+        Supplier supplier = new Supplier();
+        supplier.setFullName(supplierRequest.getFullName());
+        supplier.setAddress(supplierRequest.getAddress());
+        supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
+        return supplierMapper.toDto(supplierRepository.save(supplier));
     }
 
     @Override
@@ -37,21 +45,21 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Supplier update(Integer id, Supplier supplierDetails) throws ResourceNotFoundException {
+    public SupplierDto update(Integer id, SupplierRequest supplierRequest) throws ResourceNotFoundException {
         Supplier updatedSupplier = supplierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + id));
-        updatedSupplier.setFullName(supplierDetails.getFullName());
-        updatedSupplier.setAddress(supplierDetails.getAddress());
-        updatedSupplier.setPhoneNumber(supplierDetails.getPhoneNumber());
-        return supplierRepository.save(updatedSupplier);
+        updatedSupplier.setFullName(supplierRequest.getFullName());
+        updatedSupplier.setAddress(supplierRequest.getAddress());
+        updatedSupplier.setPhoneNumber(supplierRequest.getPhoneNumber());
+        return supplierMapper.toDto(supplierRepository.save(updatedSupplier));
     }
 
     @Override
-    public List<Supplier> findByPhoneNumberContaining(String phoneNumber) {
-        return supplierRepository.findByPhoneNumberContaining(phoneNumber);
+    public List<SupplierDto> findByPhoneNumberContaining(String phoneNumber) {
+        return supplierMapper.toDtos(supplierRepository.findByPhoneNumberContaining(phoneNumber));
     }
 
     @Override
-    public List<Supplier> findByFullNameContaining(String name) {
-        return supplierRepository.findByFullNameContaining(name);
+    public List<SupplierDto> findByFullNameContaining(String name) {
+        return supplierMapper.toDtos(supplierRepository.findByFullNameContaining(name));
     }
 }

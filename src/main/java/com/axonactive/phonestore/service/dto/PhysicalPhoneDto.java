@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PhysicalPhoneDto {
+    private Integer id;
     private String model;
     private Long imei;
     private String color;

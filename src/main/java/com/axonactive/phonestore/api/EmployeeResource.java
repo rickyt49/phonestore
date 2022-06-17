@@ -1,16 +1,11 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.EmployeeRequest;
-import com.axonactive.phonestore.entity.Employee;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
-import com.axonactive.phonestore.service.BillDetailService;
 import com.axonactive.phonestore.service.BillService;
 import com.axonactive.phonestore.service.EmployeeService;
-import com.axonactive.phonestore.service.StoreService;
 import com.axonactive.phonestore.service.dto.BillDto;
 import com.axonactive.phonestore.service.dto.EmployeeDto;
-import com.axonactive.phonestore.service.mapper.BillDetailMapper;
-import com.axonactive.phonestore.service.mapper.BillMapper;
 import com.axonactive.phonestore.service.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @RestController
 @RequestMapping(EmployeeResource.PATH)
@@ -31,32 +25,22 @@ public class EmployeeResource {
     private EmployeeMapper employeeMapper;
 
     @Autowired
-    private BillMapper billMapper;
-
-    @Autowired
-    private BillDetailMapper billDetailMapper;
-    @Autowired
-    private BillDetailService billDetailService;
-    @Autowired
-    private StoreService storeService;
-
-    @Autowired
     private BillService billService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {
-        return ResponseEntity.ok(employeeMapper.toDtos(employeeService.getAll()));
+        return ResponseEntity.ok(employeeService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(employeeMapper.toDto(employeeService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id))));
+        return ResponseEntity.ok(employeeService.findById(id));
     }
 
     @PostMapping
     public ResponseEntity<EmployeeDto> add(@RequestBody EmployeeRequest employeeRequest) throws ResourceNotFoundException {
-        Employee createdEmployee = employeeService.save(new Employee(null, employeeRequest.getFirstName(), employeeRequest.getLastName(), employeeRequest.getGender(), employeeRequest.getEmail(), employeeRequest.getPhoneNumber(), employeeRequest.getAddress(), employeeRequest.getEmployeeType(), employeeRequest.getEmployeeStatus(), employeeRequest.getManagerId(), storeService.findById(employeeRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + employeeRequest.getStoreId()))));
-        return ResponseEntity.created(URI.create(EmployeeResource.PATH + "/" + createdEmployee.getId())).body(employeeMapper.toDto(createdEmployee));
+        EmployeeDto createdEmployee = employeeService.save(employeeRequest);
+        return ResponseEntity.created(URI.create(EmployeeResource.PATH + "/" + createdEmployee.getId())).body(createdEmployee);
     }
 
     @DeleteMapping("/{id}")
@@ -67,48 +51,21 @@ public class EmployeeResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Integer id, @RequestBody EmployeeRequest employeeRequest) throws ResourceNotFoundException {
-        Employee updatedEmployee = employeeService.update(id, new Employee(
-                null,
-                employeeRequest.getFirstName(),
-                employeeRequest.getLastName(),
-                employeeRequest.getGender(),
-                employeeRequest.getEmail(),
-                employeeRequest.getPhoneNumber(),
-                employeeRequest.getAddress(),
-                employeeRequest.getEmployeeType(),
-                employeeRequest.getEmployeeStatus(),
-                employeeRequest.getManagerId(),
-                storeService.findById(employeeRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + employeeRequest.getStoreId()))));
-        return ResponseEntity.ok(employeeMapper.toDto(updatedEmployee));
+        return ResponseEntity.ok(employeeService.update(id, employeeRequest));
     }
+
 
     @GetMapping("/{id}/bills")
     public ResponseEntity<List<BillDto>> getBillByEmployeeAndSaleDate(@PathVariable(value = "id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
-        if (startDate == null && endDate != null) {
-            List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeIdAndSaleDateBefore(id, LocalDate.parse(endDate)));
-            for (BillDto billDto : resultList) {
-                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
-            }
-            return ResponseEntity.ok(resultList);
+        if (startDate == null && endDate == null) {
+            return ResponseEntity.ok(billService.findByEmployeeId(id));
         }
-        if (endDate == null && startDate != null) {
-            List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeIdAndSaleDateAfter(id, LocalDate.parse(startDate)));
-            for (BillDto billDto : resultList) {
-                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
-            }
-            return ResponseEntity.ok(resultList);
+        if (endDate == null) {
+            return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateAfter(id, LocalDate.parse(startDate)));
         }
         if (startDate == null) {
-            List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeId(id));
-            for (BillDto billDto : resultList) {
-                billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
-            }
-            return ResponseEntity.ok(resultList);
+            return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateBefore(id, LocalDate.parse(endDate)));
         }
-        List<BillDto> resultList = billMapper.toDtos(billService.findByEmployeeIdAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
-        for (BillDto billDto : resultList) {
-            billDto.setBillDetailDtos(billDetailMapper.toDtos(billDetailService.findByBillId(billDto.getId())));
-        }
-        return ResponseEntity.ok(resultList);
+        return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
     }
 }

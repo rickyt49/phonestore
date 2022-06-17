@@ -1,23 +1,24 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.SupplierRequest;
 import com.axonactive.phonestore.entity.Supplier;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.SupplierDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SupplierService {
-    List<Supplier> getAll();
+    List<SupplierDto> getAll();
 
-    Optional<Supplier> findById(Integer id);
+    SupplierDto findById(Integer id) throws ResourceNotFoundException;
 
-    Supplier save(Supplier owner);
+    SupplierDto save(SupplierRequest supplierRequest);
 
     void delete(Integer id);
 
-    Supplier update(Integer id, Supplier supplierDetails) throws ResourceNotFoundException;
+    SupplierDto update(Integer id, SupplierRequest supplierRequest) throws ResourceNotFoundException;
 
-    List<Supplier> findByPhoneNumberContaining(String phoneNumber);
+    List<SupplierDto> findByPhoneNumberContaining(String phoneNumber);
 
-    List<Supplier> findByFullNameContaining(String name);
+    List<SupplierDto> findByFullNameContaining(String name);
 }

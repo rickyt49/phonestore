@@ -1,39 +1,39 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.BillRequest;
 import com.axonactive.phonestore.entity.Bill;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
-import org.springframework.data.jpa.repository.Query;
+import com.axonactive.phonestore.service.dto.BillDto;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface BillService {
-    List<Bill> getAll();
+    List<BillDto> getAll();
 
-    Optional<Bill> findById(Integer id);
+    BillDto findById(Integer id) throws ResourceNotFoundException;
 
-    Bill save(Bill bill);
+    BillDto save(BillRequest bill) throws ResourceNotFoundException;
 
     void delete(Integer id);
 
-    Bill update(Integer id, Bill billDetails) throws ResourceNotFoundException;
+    BillDto update(Integer id, BillRequest billRequest) throws ResourceNotFoundException;
 
-    List<Bill> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate);
+    List<BillDto> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate);
 
-    List<Bill> findByEmployeeId(Integer id);
+    List<BillDto> findByEmployeeId(Integer id);
 
-    List<Bill> findByEmployeeIdAndSaleDateBefore(Integer id, LocalDate endDate);
+    List<BillDto> findByEmployeeIdAndSaleDateBefore(Integer id, LocalDate endDate);
 
-    List<Bill> findByEmployeeIdAndSaleDateAfter(Integer id, LocalDate startDate);
+    List<BillDto> findByEmployeeIdAndSaleDateAfter(Integer id, LocalDate startDate);
 
-    List<Bill> findAllBillByStore(Integer storeId);
+    List<BillDto> findAllBillByStore(Integer storeId);
 
-    List<Bill> findAllBillByStoreAndSaleDateAfter(Integer storeId, LocalDate startDate);
+    List<BillDto> findAllBillByStoreAndSaleDateAfter(Integer storeId, LocalDate startDate);
 
-    List<Bill> findAllBillByStoreAndSaleDateBefore(Integer storeId, LocalDate endDate);
+    List<BillDto> findAllBillByStoreAndSaleDateBefore(Integer storeId, LocalDate endDate);
 
-    List<Bill> findAllBillByStoreAndSaleDateBetween(Integer storeId, LocalDate startDate, LocalDate endDate);
+    List<BillDto> findAllBillByStoreAndSaleDateBetween(Integer storeId, LocalDate startDate, LocalDate endDate);
 
 
     Integer getTotalGrossProfit(Integer storeId);

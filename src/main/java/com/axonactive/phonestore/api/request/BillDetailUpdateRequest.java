@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillUpdateRequest {
+public class BillDetailUpdateRequest {
     private String Imei;
 
     @Min(value = 0, message = "Sell price must be positive")

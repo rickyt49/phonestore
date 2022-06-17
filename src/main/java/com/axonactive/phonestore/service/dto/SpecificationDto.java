@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SpecificationDto {
+    private Integer id;
+
     private String model;
     private String cpu;
     private String gpu;

@@ -1,26 +1,27 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.PhysicalPhoneRequest;
 import com.axonactive.phonestore.entity.PhysicalPhone;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PhysicalPhoneService {
-    List<PhysicalPhone> getAll();
+    List<PhysicalPhoneDto> getAll();
 
-    Optional<PhysicalPhone> findById(Integer id);
+    PhysicalPhoneDto findById(Integer id) throws ResourceNotFoundException;
 
-    PhysicalPhone save(PhysicalPhone physicalPhone);
+    PhysicalPhoneDto save(PhysicalPhoneRequest physicalPhoneRequest) throws ResourceNotFoundException;
 
     void delete(Integer id);
 
-    PhysicalPhone update(Integer id, PhysicalPhone physicalPhoneDetails) throws ResourceNotFoundException;
+    PhysicalPhoneDto update(Integer id, PhysicalPhoneRequest physicalPhoneRequest) throws ResourceNotFoundException;
 
-    Optional<PhysicalPhone> findByImei(String imei);
+    PhysicalPhoneDto findByImei(String imei) throws ResourceNotFoundException;
 
-    List<PhysicalPhone> findAllAvailablePhone();
+    List<PhysicalPhoneDto> findAllAvailablePhone();
 
-    List<PhysicalPhone> findAllAvailablePhoneByStore(Integer storeId);
+    List<PhysicalPhoneDto> findAllAvailablePhoneByStore(Integer storeId);
 
 }

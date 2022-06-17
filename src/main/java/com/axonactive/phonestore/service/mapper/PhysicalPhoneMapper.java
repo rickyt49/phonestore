@@ -4,7 +4,6 @@ import com.axonactive.phonestore.entity.PhysicalPhone;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

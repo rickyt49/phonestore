@@ -25,22 +25,18 @@ public class CustomerResource {
 
     @GetMapping
     public ResponseEntity<List<CustomerDto>> getAll() {
-        return ResponseEntity.ok(customerMapper.toDtos(customerService.getAll()));
+        return ResponseEntity.ok(customerService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> findCustomerById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(customerMapper.toDto(customerService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found: " + id))));
+        return ResponseEntity.ok(customerService.findById(id));
     }
 
     @PostMapping
     public ResponseEntity<CustomerDto> add(@RequestBody CustomerRequest customerRequest) {
-        Customer customer = new Customer();
-        customer.setAddress(customerRequest.getAddress());
-        customer.setFullName(customerRequest.getFullName());
-        customer.setPhoneNumber(customerRequest.getPhoneNumber());
-        Customer createdCustomer = customerService.save(customer);
-        return ResponseEntity.created(URI.create(CustomerResource.PATH + "/" + createdCustomer.getId())).body(customerMapper.toDto(createdCustomer));
+        CustomerDto createdCustomer = customerService.save(customerRequest);
+        return ResponseEntity.created(URI.create(CustomerResource.PATH + "/" + createdCustomer.getId())).body(createdCustomer);
     }
 
     @DeleteMapping("/{id}")
@@ -51,22 +47,19 @@ public class CustomerResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> update(@PathVariable(value = "id") Integer id, @RequestBody CustomerRequest customerRequest) throws ResourceNotFoundException {
-        Customer updatedCustomer = new Customer();
-        updatedCustomer.setAddress(customerRequest.getAddress());
-        updatedCustomer.setFullName(customerRequest.getFullName());
-        updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());
-        return ResponseEntity.ok(customerMapper.toDto(customerService.update(id, updatedCustomer)));
+        return ResponseEntity.ok(customerService.update(id, customerRequest));
     }
 
-//    @GetMapping("/where")
-//    public ResponseEntity<List<CustomerDto>> findCustomerByPhoneNumber(@RequestParam(value = "phonenumber") String phoneNumber) {
-//        return ResponseEntity.ok(customerMapper.toDtos(customerService.findByPhoneNumberContaining(phoneNumber)));
-//    }
-
-//    @GetMapping("/where")
-//    public ResponseEntity<List<CustomerDto>> findCustomerByFullName(@RequestParam(value = "name") String name) {
-//        return ResponseEntity.ok(customerMapper.toDtos(customerService.findByFullNameContaining(name)));
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomerDto>> findCustomerByPhoneNumber(@RequestParam(value = "phoneNumber", required = false) String phoneNumber, @RequestParam(value = "name", required = false) String name) {
+        if (null == name && null != phoneNumber) {
+            return ResponseEntity.ok(customerService.findByPhoneNumberContaining(phoneNumber));
+        }
+        if (null == phoneNumber && null != name) {
+            return ResponseEntity.ok(customerService.findByFullNameContaining(name));
+        }
+        return ResponseEntity.ok(customerService.getAll());
+    }
 
 
 }

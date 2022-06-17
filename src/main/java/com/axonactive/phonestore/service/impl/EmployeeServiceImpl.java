@@ -1,14 +1,17 @@
 package com.axonactive.phonestore.service.impl;
 
+import com.axonactive.phonestore.api.request.EmployeeRequest;
 import com.axonactive.phonestore.entity.Employee;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.repository.EmployeeRepository;
+import com.axonactive.phonestore.repository.StoreRepository;
 import com.axonactive.phonestore.service.EmployeeService;
+import com.axonactive.phonestore.service.dto.EmployeeDto;
+import com.axonactive.phonestore.service.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -16,19 +19,36 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
+    EmployeeMapper employeeMapper;
+
+    @Autowired
+    StoreRepository storeRepository;
+
     @Override
-    public List<Employee> getAll() {
-        return employeeRepository.findAll();
+    public List<EmployeeDto> getAll() {
+        return employeeMapper.toDtos(employeeRepository.findAll());
     }
 
     @Override
-    public Optional<Employee> findById(Integer id) {
-        return employeeRepository.findById(id);
+    public EmployeeDto findById(Integer id) throws ResourceNotFoundException {
+        return employeeMapper.toDto(employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id)));
     }
 
     @Override
-    public Employee save(Employee employee) {
-        return employeeRepository.save(employee);
+    public EmployeeDto save(EmployeeRequest employeeRequest) throws ResourceNotFoundException {
+        Employee createdEmployee = new Employee();
+        createdEmployee.setFirstName(employeeRequest.getFirstName());
+        createdEmployee.setLastName(employeeRequest.getLastName());
+        createdEmployee.setGender(employeeRequest.getGender());
+        createdEmployee.setEmail(employeeRequest.getEmail());
+        createdEmployee.setPhoneNumber(employeeRequest.getPhoneNumber());
+        createdEmployee.setAddress(employeeRequest.getAddress());
+        createdEmployee.setEmployeeType(employeeRequest.getEmployeeType());
+        createdEmployee.setEmployeeStatus(employeeRequest.getEmployeeStatus());
+        createdEmployee.setManagerId(employeeRequest.getManagerId());
+        createdEmployee.setStore(storeRepository.findById(employeeRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + employeeRequest.getStoreId())));
+        return employeeMapper.toDto(employeeRepository.save(createdEmployee));
     }
 
     @Override
@@ -37,17 +57,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee update(Integer id, Employee employeeDetails) throws ResourceNotFoundException {
+    public EmployeeDto update(Integer id, EmployeeRequest employeeRequest) throws ResourceNotFoundException {
         Employee updatedEmployee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee not found: " + id));
-        updatedEmployee.setFirstName(employeeDetails.getFirstName());
-        updatedEmployee.setLastName(employeeDetails.getLastName());
-        updatedEmployee.setGender(employeeDetails.getGender());
-        updatedEmployee.setEmail(employeeDetails.getEmail());
-        updatedEmployee.setPhoneNumber(employeeDetails.getPhoneNumber());
-        updatedEmployee.setAddress(employeeDetails.getAddress());
-        updatedEmployee.setEmployeeType(employeeDetails.getEmployeeType());
-        updatedEmployee.setManagerId(employeeDetails.getManagerId());
-        updatedEmployee.setEmployeeStatus(employeeDetails.getEmployeeStatus());
-        return employeeRepository.save(updatedEmployee);
+        updatedEmployee.setFirstName(employeeRequest.getFirstName());
+        updatedEmployee.setLastName(employeeRequest.getLastName());
+        updatedEmployee.setGender(employeeRequest.getGender());
+        updatedEmployee.setEmail(employeeRequest.getEmail());
+        updatedEmployee.setPhoneNumber(employeeRequest.getPhoneNumber());
+        updatedEmployee.setAddress(employeeRequest.getAddress());
+        updatedEmployee.setEmployeeType(employeeRequest.getEmployeeType());
+        updatedEmployee.setManagerId(employeeRequest.getManagerId());
+        updatedEmployee.setEmployeeStatus(employeeRequest.getEmployeeStatus());
+        updatedEmployee.setStore(storeRepository.findById(employeeRequest.getStoreId()).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + employeeRequest.getStoreId())));
+
+        return employeeMapper.toDto(employeeRepository.save(updatedEmployee));
     }
 }

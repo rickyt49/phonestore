@@ -1,16 +1,20 @@
 package com.axonactive.phonestore.service.impl;
 
+import com.axonactive.phonestore.api.request.BillDetailRequest;
+import com.axonactive.phonestore.api.request.BillDetailUpdateRequest;
 import com.axonactive.phonestore.entity.Bill;
 import com.axonactive.phonestore.entity.BillDetail;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.repository.BillDetailRepository;
 import com.axonactive.phonestore.repository.BillRepository;
+import com.axonactive.phonestore.repository.PhysicalPhoneRepository;
 import com.axonactive.phonestore.service.BillDetailService;
+import com.axonactive.phonestore.service.dto.BillDetailDto;
+import com.axonactive.phonestore.service.mapper.BillDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BillDetailServiceImpl implements BillDetailService {
@@ -18,22 +22,33 @@ public class BillDetailServiceImpl implements BillDetailService {
     BillDetailRepository billDetailRepository;
     @Autowired
     BillRepository billRepository;
+    @Autowired
+    BillDetailMapper billDetailMapper;
+
+    @Autowired
+    PhysicalPhoneRepository physicalPhoneRepository;
 
     @Override
-    public List<BillDetail> getAll() {
-        return billDetailRepository.findAll();
+    public List<BillDetailDto> getAll() {
+        return billDetailMapper.toDtos(billDetailRepository.findAll());
     }
 
     @Override
-    public Optional<BillDetail> findById(Integer id) {
-        return billDetailRepository.findById(id);
+    public BillDetailDto findById(Integer id) throws ResourceNotFoundException {
+        return billDetailMapper.toDto(billDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill Detail not found " + id)));
     }
 
     @Override
-    public BillDetail save(BillDetail billDetail) throws ResourceNotFoundException {
+    public BillDetailDto save(BillDetailRequest billDetailRequest) throws ResourceNotFoundException {
+        BillDetail billDetail = new BillDetail();
+        billDetail.setBill(billRepository.findById(billDetailRequest.getBillId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + billDetailRequest.getBillId())));
+        billDetail.setPhysicalPhone(physicalPhoneRepository.findByImei(billDetailRequest.getImei()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + billDetailRequest.getImei())));
+        billDetail.setSellPrice(billDetailRequest.getSellPrice());
+        billDetail.setDiscountAmount(billDetailRequest.getDiscountAmount());
+        billDetail.setFinalSellPrice(billDetailRequest.getSellPrice() - billDetailRequest.getDiscountAmount());
         BillDetail createdBillDetail = billDetailRepository.save(billDetail);
-        updateTotalPrice(billDetail);
-        return createdBillDetail;
+        updateTotalPrice(createdBillDetail);
+        return billDetailMapper.toDto(createdBillDetail);
     }
 
     @Override
@@ -44,21 +59,23 @@ public class BillDetailServiceImpl implements BillDetailService {
     }
 
     @Override
-    public BillDetail update(Integer id, BillDetail billDetailDetails) throws ResourceNotFoundException {
+    public BillDetailDto update(Integer id, BillDetailUpdateRequest billDetailUpdateRequest) throws ResourceNotFoundException {
         BillDetail updatedBillDetail = billDetailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill Detail not found: " + id));
-        updatedBillDetail.setPhysicalPhone(billDetailDetails.getPhysicalPhone());
-        updatedBillDetail.setSellPrice(billDetailDetails.getSellPrice());
-        updatedBillDetail.setDiscountAmount(billDetailDetails.getDiscountAmount());
-        updatedBillDetail.setFinalSellPrice(billDetailDetails.getFinalSellPrice());
-        updateTotalPrice(updatedBillDetail);
-        return billDetailRepository.save(updatedBillDetail);
+        updatedBillDetail.setPhysicalPhone(physicalPhoneRepository.findByImei(billDetailUpdateRequest.getImei()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + billDetailUpdateRequest.getImei())));
+        updatedBillDetail.setSellPrice(billDetailUpdateRequest.getSellPrice());
+        updatedBillDetail.setDiscountAmount(billDetailUpdateRequest.getDiscountAmount());
+        if (updatedBillDetail.getFinalSellPrice() != billDetailUpdateRequest.getSellPrice() - billDetailUpdateRequest.getDiscountAmount()) {
+            updatedBillDetail.setFinalSellPrice(billDetailUpdateRequest.getSellPrice() - billDetailUpdateRequest.getDiscountAmount());
+            updateTotalPrice(updatedBillDetail);
+        }
+
+        return billDetailMapper.toDto(billDetailRepository.save(updatedBillDetail));
     }
 
     @Override
-    public List<BillDetail> findByBillId(Integer id) {
-        return billDetailRepository.findByBillId(id);
+    public List<BillDetailDto> findByBillId(Integer id) {
+        return billDetailMapper.toDtos(billDetailRepository.findByBillId(id));
     }
-
 
 
     public void updateTotalPrice(BillDetail billDetail) throws ResourceNotFoundException {

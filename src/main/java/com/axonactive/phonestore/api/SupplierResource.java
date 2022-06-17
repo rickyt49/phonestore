@@ -26,22 +26,18 @@ public class SupplierResource {
 
     @GetMapping
     public ResponseEntity<List<SupplierDto>> getAll() {
-        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.getAll()));
+        return ResponseEntity.ok(supplierService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SupplierDto> findSupplierById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(supplierMapper.toDto(supplierService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + id))));
+        return ResponseEntity.ok(supplierService.findById(id));
     }
 
     @PostMapping
     public ResponseEntity<SupplierDto> add(@RequestBody SupplierRequest supplierRequest) {
-        Supplier supplier = new Supplier();
-        supplier.setFullName(supplierRequest.getFullName());
-        supplier.setAddress(supplierRequest.getAddress());
-        supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
-        Supplier createdSupplier = supplierService.save(supplier);
-        return ResponseEntity.created(URI.create(SupplierResource.PATH + "/" + createdSupplier.getId())).body(supplierMapper.toDto(createdSupplier));
+        SupplierDto createdSupplier = supplierService.save(supplierRequest);
+        return ResponseEntity.created(URI.create(SupplierResource.PATH + "/" + createdSupplier.getId())).body(createdSupplier);
     }
 
     @DeleteMapping("/{id}")
@@ -52,20 +48,18 @@ public class SupplierResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<SupplierDto> update(@PathVariable(value = "id") Integer id, @RequestBody SupplierRequest supplierRequest) throws ResourceNotFoundException {
-        Supplier supplier = new Supplier();
-        supplier.setFullName(supplierRequest.getFullName());
-        supplier.setAddress(supplierRequest.getAddress());
-        supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
-        return ResponseEntity.ok(supplierMapper.toDto(supplierService.update(id, supplier)));
+        return ResponseEntity.ok(supplierService.update(id, supplierRequest));
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<SupplierDto>> findSupplierByPhoneNumber(@RequestParam(value = "phonenumber") String phoneNumber) {
-//        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.findByPhoneNumberContaining(phoneNumber)));
-//    }
-//
-//    @GetMapping("/where")
-//    public ResponseEntity<List<SupplierDto>> findSupplierByFullName(@RequestParam("name") String name) {
-//        return ResponseEntity.ok(supplierMapper.toDtos(supplierService.findByFullNameContaining(name)));
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<SupplierDto>> findSupplierByPhoneNumber(@RequestParam(value = "phoneNumber", required = false) String phoneNumber, @RequestParam(value = "name", required = false) String name) {
+        if (null == name && null != phoneNumber) {
+            return ResponseEntity.ok(supplierService.findByPhoneNumberContaining(phoneNumber));
+        }
+        if (null == phoneNumber && null != name) {
+            return ResponseEntity.ok(supplierService.findByFullNameContaining(name));
+        }
+        return ResponseEntity.ok(supplierService.getAll());
+    }
+
 }

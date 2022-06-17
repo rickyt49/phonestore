@@ -1,23 +1,24 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.CustomerRequest;
 import com.axonactive.phonestore.entity.Customer;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.CustomerDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CustomerService {
-    List<Customer> getAll();
+    List<CustomerDto> getAll();
 
-    Optional<Customer> findById(Integer id);
+    CustomerDto findById(Integer id) throws ResourceNotFoundException;
 
-    Customer save(Customer customer);
+    CustomerDto save(CustomerRequest customerRequest);
 
     void delete(Integer id);
 
-    Customer update(Integer id, Customer customerDetails) throws ResourceNotFoundException;
+    CustomerDto update(Integer id, CustomerRequest customerRequest) throws ResourceNotFoundException;
 
-    List<Customer> findByPhoneNumberContaining(String phoneNumber);
+    List<CustomerDto> findByPhoneNumberContaining(String phoneNumber);
 
-    List<Customer> findByFullNameContaining(String name);
+    List<CustomerDto> findByFullNameContaining(String name);
 }

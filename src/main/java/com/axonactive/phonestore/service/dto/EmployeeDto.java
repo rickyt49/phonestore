@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDto {
+    private Integer id;
     private String fullName;
     private Gender gender;
     private String phoneNumber;

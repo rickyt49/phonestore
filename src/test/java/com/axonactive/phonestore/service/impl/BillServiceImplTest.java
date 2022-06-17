@@ -56,30 +56,38 @@ class BillServiceImplTest {
     }
 
     @Test
-    void testFindAllBillByStoreAndSaleDateAfter() {
+    void testFindAllBillByStoreAndSaleDateAfter_shouldReturn3_whenInputStoreId1AndDateJun15th2022() {
+        assertEquals(3, billService.findAllBillByStoreAndSaleDateAfter(1, LocalDate.of(2022, 6, 15)).size());
     }
 
     @Test
-    void testFindAllBillByStoreAndSaleDateBefore() {
+    void testFindAllBillByStoreAndSaleDateBefore_shouldReturn3_whenInputStoreId1AndDateJun30th2022() {
+        assertEquals(3, billService.findAllBillByStoreAndSaleDateBefore(1, LocalDate.of(2022, 6, 30)).size());
     }
 
     @Test
-    void testFindAllBillByStoreAndSaleDateBetween() {
+    void testFindAllBillByStoreAndSaleDateBetween_shouldReturn3_whenInputEmpId1AndDateBetweenJun1st2022AndJun30th2022() {
+        assertEquals(3, billService.findAllBillByStoreAndSaleDateBetween(1, LocalDate.of(2022, 6, 15), LocalDate.of(2022, 6, 30)).size());
     }
 
     @Test
-    void testGetTotalGrossProfit() {
+    void testGetTotalGrossProfit_shouldReturn19000000_whenInputStoreId1() {
+        assertEquals(19000000, billService.getTotalGrossProfit(1));
     }
 
     @Test
-    void testGetTotalGrossProfitAfter() {
+    void testGetTotalGrossProfitAfter_shouldReturn19000000_whenInputStoreId1AndDateJun15th2022() {
+        assertEquals(19000000, billService.getTotalGrossProfitAfter(1, LocalDate.of(2022, 6, 15)));
+    }
+
+
+    @Test
+    void testGetTotalGrossProfitBefore_shouldReturn19000000_whenInputStoreId1AndDateJun30th2022() {
+        assertEquals(19000000, billService.getTotalGrossProfitBefore(1, LocalDate.of(2022, 6, 30)));
     }
 
     @Test
-    void testGetTotalGrossProfitBefore() {
-    }
-
-    @Test
-    void testGetTotalGrossProfitBetween() {
+    void testGetTotalGrossProfitBetween_shouldReturn19000000_whenInputStoreId1AndDateJun15th2022AndJun30th2022() {
+        assertEquals(19000000, billService.getTotalGrossProfitBetween(1, LocalDate.of(2022, 6, 15), LocalDate.of(2022, 6, 30)));
     }
 }

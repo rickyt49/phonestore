@@ -1,15 +1,9 @@
 package com.axonactive.phonestore.service.mapper;
 
 import com.axonactive.phonestore.entity.Bill;
-import com.axonactive.phonestore.service.BillDetailService;
 import com.axonactive.phonestore.service.dto.BillDto;
-import org.aspectj.lang.annotation.After;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

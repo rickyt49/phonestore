@@ -3,7 +3,6 @@ package com.axonactive.phonestore.service.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
 import java.time.LocalDate;
 import java.util.List;

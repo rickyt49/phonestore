@@ -1,17 +1,20 @@
 package com.axonactive.phonestore.service.impl;
 
+import com.axonactive.phonestore.api.request.BillRequest;
 import com.axonactive.phonestore.entity.Bill;
-import com.axonactive.phonestore.entity.BillDetail;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.repository.BillRepository;
+import com.axonactive.phonestore.repository.CustomerRepository;
+import com.axonactive.phonestore.repository.EmployeeRepository;
 import com.axonactive.phonestore.service.BillDetailService;
 import com.axonactive.phonestore.service.BillService;
+import com.axonactive.phonestore.service.dto.BillDto;
+import com.axonactive.phonestore.service.mapper.BillMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 
@@ -23,19 +26,34 @@ public class BillServiceImpl implements BillService {
     @Autowired
     BillDetailService billDetailService;
 
+    @Autowired
+    BillMapper billMapper;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @Override
-    public List<Bill> getAll() {
-        return billRepository.findAll();
+    public List<BillDto> getAll() {
+        List<BillDto> billDtos = (billMapper.toDtos(billRepository.findAll()));
+        billDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return billDtos;
     }
 
     @Override
-    public Optional<Bill> findById(Integer id) {
-        return billRepository.findById(id);
+    public BillDto findById(Integer id) throws ResourceNotFoundException {
+        BillDto resultBill = billMapper.toDto(billRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + id)));
+        resultBill.setBillDetailDtos(billDetailService.findByBillId(id));
+        return resultBill;
     }
 
     @Override
-    public Bill save(Bill bill) {
-        return billRepository.save(bill);
+    public BillDto save(BillRequest billRequest) throws ResourceNotFoundException {
+        Bill bill = new Bill();
+        bill.setCustomer(customerRepository.findById(billRequest.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found! " + billRequest.getCustomerId())));
+        bill.setEmployee(employeeRepository.findById(billRequest.getEmployeeId()).orElseThrow(() -> new ResourceNotFoundException("Employee not found! " + billRequest.getEmployeeId())));
+        bill.setTotalSellPrice(0);
+        return billMapper.toDto(billRepository.save(bill));
     }
 
     @Override
@@ -44,52 +62,70 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill update(Integer id, Bill billDetails) throws ResourceNotFoundException {
-        Bill updatedBill = billRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + id));
-        updatedBill.setSaleDate(billDetails.getSaleDate());
-        updatedBill.setCustomer(billDetails.getCustomer());
-        updatedBill.setEmployee(billDetails.getEmployee());
-        return billRepository.save(updatedBill);
+    public BillDto update(Integer id, BillRequest billRequest) throws ResourceNotFoundException {
+        Bill bill = billRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + id));
+        bill.setCustomer(customerRepository.findById(billRequest.getCustomerId()).orElseThrow(() -> new ResourceNotFoundException("Customer not found! " + billRequest.getCustomerId())));
+        bill.setEmployee(employeeRepository.findById(billRequest.getEmployeeId()).orElseThrow(() -> new ResourceNotFoundException("Employee not found! " + billRequest.getEmployeeId())));
+        Bill updatedBill = billRepository.save(bill);
+        BillDto updatedBillDto = billMapper.toDto(updatedBill);
+        updatedBillDto.setBillDetailDtos(billDetailService.findByBillId(updatedBillDto.getId()));
+        return updatedBillDto;
     }
 
     @Override
-    public List<Bill> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate) {
-        return billRepository.findByEmployeeIdAndSaleDateBetween(id, startDate, endDate);
+    public List<BillDto> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findByEmployeeIdAndSaleDateBetween(id, startDate, endDate));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findByEmployeeId(Integer id) {
-        return billRepository.findByEmployeeId(id);
+    public List<BillDto> findByEmployeeId(Integer id) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findByEmployeeId(id));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findByEmployeeIdAndSaleDateBefore(Integer id, LocalDate endDate) {
-        return billRepository.findByEmployeeIdAndSaleDateBefore(id, endDate);
+    public List<BillDto> findByEmployeeIdAndSaleDateBefore(Integer id, LocalDate endDate) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findByEmployeeIdAndSaleDateBefore(id, endDate));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findByEmployeeIdAndSaleDateAfter(Integer id, LocalDate startDate) {
-        return billRepository.findByEmployeeIdAndSaleDateAfter(id, startDate);
+    public List<BillDto> findByEmployeeIdAndSaleDateAfter(Integer id, LocalDate startDate) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findByEmployeeIdAndSaleDateAfter(id, startDate));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findAllBillByStore(Integer storeId) {
-        return billRepository.findAllBillByStore(storeId);
+    public List<BillDto> findAllBillByStore(Integer storeId) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findAllBillByStore(storeId));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findAllBillByStoreAndSaleDateAfter(Integer storeId, LocalDate startDate) {
-        return billRepository.findAllBillByStoreAndSaleDateAfter(storeId, startDate);
+    public List<BillDto> findAllBillByStoreAndSaleDateAfter(Integer storeId, LocalDate startDate) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findAllBillByStoreAndSaleDateAfter(storeId, startDate));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findAllBillByStoreAndSaleDateBefore(Integer storeId, LocalDate endDate) {
-        return billRepository.findAllBillByStoreAndSaleDateBefore(storeId, endDate);
+    public List<BillDto> findAllBillByStoreAndSaleDateBefore(Integer storeId, LocalDate endDate) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findAllBillByStoreAndSaleDateBefore(storeId, endDate));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override
-    public List<Bill> findAllBillByStoreAndSaleDateBetween(Integer storeId, LocalDate startDate, LocalDate endDate) {
-        return billRepository.findAllBillByStoreAndSaleDateBetween(storeId, startDate, endDate);
+    public List<BillDto> findAllBillByStoreAndSaleDateBetween(Integer storeId, LocalDate startDate, LocalDate endDate) {
+        List<BillDto> resultBillDtos = billMapper.toDtos(billRepository.findAllBillByStoreAndSaleDateBetween(storeId, startDate, endDate));
+        resultBillDtos.forEach(b -> b.setBillDetailDtos(billDetailService.findByBillId(b.getId())));
+        return resultBillDtos;
     }
 
     @Override

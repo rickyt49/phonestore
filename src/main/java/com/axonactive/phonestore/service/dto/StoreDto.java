@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class StoreDto {
+    private Integer id;
     private String name;
     private String address;
     private String phoneNumber;

@@ -4,7 +4,6 @@ import com.axonactive.phonestore.entity.BillDetail;
 import com.axonactive.phonestore.service.dto.BillDetailDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

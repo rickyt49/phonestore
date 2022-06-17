@@ -1,12 +1,9 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.BillDetailRequest;
-import com.axonactive.phonestore.api.request.BillUpdateRequest;
-import com.axonactive.phonestore.entity.BillDetail;
+import com.axonactive.phonestore.api.request.BillDetailUpdateRequest;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.service.BillDetailService;
-import com.axonactive.phonestore.service.BillService;
-import com.axonactive.phonestore.service.PhysicalPhoneService;
 import com.axonactive.phonestore.service.dto.BillDetailDto;
 import com.axonactive.phonestore.service.mapper.BillDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,32 +22,21 @@ public class BillDetailResource {
     BillDetailService billDetailService;
     @Autowired
     BillDetailMapper billDetailMapper;
-    @Autowired
-    BillService billService;
-    @Autowired
-    PhysicalPhoneService physicalPhoneService;
 
     @GetMapping
     public ResponseEntity<List<BillDetailDto>> getAll() {
-        return ResponseEntity.ok(billDetailMapper.toDtos(billDetailService.getAll()));
+        return ResponseEntity.ok(billDetailService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BillDetailDto> findBillDetailById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(billDetailMapper.toDto(billDetailService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bill Detail not found " + id))));
+        return ResponseEntity.ok(billDetailService.findById(id));
     }
 
     @PostMapping
     public ResponseEntity<BillDetailDto> add(@RequestBody BillDetailRequest billDetailRequest) throws ResourceNotFoundException {
-        BillDetail billDetail = new BillDetail();
-        billDetail.setBill(billService.findById(billDetailRequest.getBillId()).orElseThrow(() -> new ResourceNotFoundException("Bill not found: " + billDetailRequest.getBillId())));
-        billDetail.setPhysicalPhone(physicalPhoneService.findByImei(billDetailRequest.getImei()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + billDetailRequest.getImei())));
-        billDetail.setSellPrice(billDetailRequest.getSellPrice());
-        billDetail.setDiscountAmount(billDetailRequest.getDiscountAmount());
-        billDetail.setFinalSellPrice(billDetailRequest.getSellPrice() - billDetailRequest.getDiscountAmount());
-        BillDetail createdBillDetail = billDetailService.save(billDetail);
-
-        return ResponseEntity.created(URI.create(BillDetailResource.PATH + "/" + createdBillDetail.getId())).body(billDetailMapper.toDto(createdBillDetail));
+        BillDetailDto createdBillDetail = billDetailService.save(billDetailRequest);
+        return ResponseEntity.created(URI.create(BillDetailResource.PATH + "/" + createdBillDetail.getId())).body(createdBillDetail);
     }
 
     @DeleteMapping("/{id}")
@@ -60,12 +46,7 @@ public class BillDetailResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BillDetailDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillUpdateRequest BillUpdateRequest) throws ResourceNotFoundException {
-        BillDetail updatedBillDetail = new BillDetail();
-        updatedBillDetail.setPhysicalPhone(physicalPhoneService.findByImei(BillUpdateRequest.getImei()).orElseThrow(() -> new ResourceNotFoundException("Phone not found: " + BillUpdateRequest.getImei())));
-        updatedBillDetail.setSellPrice(BillUpdateRequest.getSellPrice());
-        updatedBillDetail.setDiscountAmount(BillUpdateRequest.getDiscountAmount());
-        updatedBillDetail.setFinalSellPrice(BillUpdateRequest.getSellPrice() - BillUpdateRequest.getDiscountAmount());
-        return ResponseEntity.ok(billDetailMapper.toDto(billDetailService.update(id, updatedBillDetail)));
+    public ResponseEntity<BillDetailDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillDetailUpdateRequest billDetailUpdateRequest) throws ResourceNotFoundException {
+        return ResponseEntity.ok(billDetailService.update(id, billDetailUpdateRequest));
     }
 }

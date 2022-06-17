@@ -1,15 +1,16 @@
 package com.axonactive.phonestore.service.impl;
 
+import com.axonactive.phonestore.api.request.CustomerRequest;
 import com.axonactive.phonestore.entity.Customer;
-import com.axonactive.phonestore.entity.Supplier;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.repository.CustomerRepository;
 import com.axonactive.phonestore.service.CustomerService;
+import com.axonactive.phonestore.service.dto.CustomerDto;
+import com.axonactive.phonestore.service.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -17,19 +18,26 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    CustomerMapper customerMapper;
+
     @Override
-    public List<Customer> getAll() {
-        return customerRepository.findAll();
+    public List<CustomerDto> getAll() {
+        return customerMapper.toDtos(customerRepository.findAll());
     }
 
     @Override
-    public Optional<Customer> findById(Integer id) {
-        return customerRepository.findById(id);
+    public CustomerDto findById(Integer id) throws ResourceNotFoundException {
+        return customerMapper.toDto(customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found: " + id)));
     }
 
     @Override
-    public Customer save(Customer customer) {
-        return customerRepository.save(customer);
+    public CustomerDto save(CustomerRequest customerRequest) {
+        Customer customer = new Customer();
+        customer.setAddress(customerRequest.getAddress());
+        customer.setFullName(customerRequest.getFullName());
+        customer.setPhoneNumber(customerRequest.getPhoneNumber());
+        return customerMapper.toDto(customerRepository.save(customer));
     }
 
     @Override
@@ -38,21 +46,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer update(Integer id, Customer customerDetails) throws ResourceNotFoundException {
+    public CustomerDto update(Integer id, CustomerRequest customerRequest) throws ResourceNotFoundException {
         Customer updatedCustomer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found: " + id));
-        updatedCustomer.setFullName(customerDetails.getFullName());
-        updatedCustomer.setAddress(customerDetails.getAddress());
-        updatedCustomer.setPhoneNumber(customerDetails.getPhoneNumber());
-        return customerRepository.save(updatedCustomer);
+        updatedCustomer.setFullName(customerRequest.getFullName());
+        updatedCustomer.setAddress(customerRequest.getAddress());
+        updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());
+        return customerMapper.toDto(customerRepository.save(updatedCustomer));
     }
 
     @Override
-    public List<Customer> findByPhoneNumberContaining(String phoneNumber) {
-        return customerRepository.findByPhoneNumberContaining(phoneNumber);
+    public List<CustomerDto> findByPhoneNumberContaining(String phoneNumber) {
+        return customerMapper.toDtos(customerRepository.findByPhoneNumberContaining(phoneNumber));
     }
 
     @Override
-    public List<Customer> findByFullNameContaining(String name) {
-        return customerRepository.findByFullNameContaining(name);
+    public List<CustomerDto> findByFullNameContaining(String name) {
+        return customerMapper.toDtos(customerRepository.findByFullNameContaining(name));
     }
 }

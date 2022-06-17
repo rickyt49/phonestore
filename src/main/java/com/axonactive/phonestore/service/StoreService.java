@@ -1,20 +1,21 @@
 package com.axonactive.phonestore.service;
 
+import com.axonactive.phonestore.api.request.StoreRequest;
 import com.axonactive.phonestore.entity.Store;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.StoreDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface StoreService {
-    List<Store> getAll();
+    List<StoreDto> getAll();
 
-    Optional<Store> findById(Integer id);
+    StoreDto findById(Integer id) throws ResourceNotFoundException;
 
-    Store save(Store store);
+    StoreDto save(StoreRequest storeRequest) throws ResourceNotFoundException;
 
     void delete(Integer id);
 
-    Store update(Integer id, Store storeDetails) throws ResourceNotFoundException;
+    StoreDto update(Integer id, StoreRequest storeRequest) throws ResourceNotFoundException;
 
 }

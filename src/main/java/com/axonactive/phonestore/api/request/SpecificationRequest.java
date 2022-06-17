@@ -19,5 +19,6 @@ public class SpecificationRequest {
     private String selfieCamera;
     private Integer batteryCapacity;
     private String manufacturer;
+    private String os;
     private ManufacturerStatus manufacturerStatus;
 }

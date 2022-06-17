@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class BillDetailDto {
+    private Integer id;
     private String model;
     private Long imei;
     private Integer sellPrice;

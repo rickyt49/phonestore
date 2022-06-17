@@ -23,5 +23,5 @@ public class PhysicalPhoneRequest {
     private LocalDate importDate;
     private Integer storeId;
     private Integer supplierId;
-    private Integer specificationId;
+    private String specificationModel;
 }

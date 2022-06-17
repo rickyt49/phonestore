@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SupplierDto {
+    private Integer id;
     private String fullName;
 
     private String phoneNumber;
