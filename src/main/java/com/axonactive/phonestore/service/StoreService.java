@@ -1,7 +1,6 @@
 package com.axonactive.phonestore.service;
 
 import com.axonactive.phonestore.api.request.StoreRequest;
-import com.axonactive.phonestore.entity.Store;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.service.dto.StoreDto;
 

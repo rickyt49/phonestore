@@ -1,7 +1,6 @@
 package com.axonactive.phonestore.service;
 
 import com.axonactive.phonestore.api.request.PhysicalPhoneRequest;
-import com.axonactive.phonestore.entity.PhysicalPhone;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 

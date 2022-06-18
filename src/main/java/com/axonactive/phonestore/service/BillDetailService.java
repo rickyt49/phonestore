@@ -2,7 +2,6 @@ package com.axonactive.phonestore.service;
 
 import com.axonactive.phonestore.api.request.BillDetailRequest;
 import com.axonactive.phonestore.api.request.BillDetailUpdateRequest;
-import com.axonactive.phonestore.entity.BillDetail;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
 import com.axonactive.phonestore.service.dto.BillDetailDto;
 
