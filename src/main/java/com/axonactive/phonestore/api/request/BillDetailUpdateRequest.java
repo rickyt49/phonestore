@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class BillDetailUpdateRequest {
     private String Imei;
-
     @Min(value = 0, message = "Sell price must be positive")
     private Integer sellPrice;
     @Min(value = 0, message = "Discount amount must be positive")

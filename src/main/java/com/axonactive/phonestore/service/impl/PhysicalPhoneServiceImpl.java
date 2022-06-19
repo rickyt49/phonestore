@@ -8,6 +8,7 @@ import com.axonactive.phonestore.repository.SpecificationRepository;
 import com.axonactive.phonestore.repository.StoreRepository;
 import com.axonactive.phonestore.repository.SupplierRepository;
 import com.axonactive.phonestore.service.PhysicalPhoneService;
+import com.axonactive.phonestore.service.dto.PhoneModelAndAmountDto;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import com.axonactive.phonestore.service.mapper.PhysicalPhoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +93,10 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
     @Override
     public List<PhysicalPhoneDto> findAllAvailablePhoneByStore(Integer storeId) {
         return physicalPhoneMapper.toDtos(physicalPhoneRepository.findAllAvailablePhoneByStore(storeId));
+    }
+
+    @Override
+    public List<PhoneModelAndAmountDto> getPhoneModelAndItsAmount() {
+        return physicalPhoneRepository.getPhoneModelAndItsAmount();
     }
 }

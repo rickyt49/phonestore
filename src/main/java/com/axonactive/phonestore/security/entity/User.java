@@ -1,7 +1,10 @@
 package com.axonactive.phonestore.security.entity;
 
+import com.axonactive.phonestore.entity.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,65 +12,30 @@ import java.util.List;
 
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @NoArgsConstructor
+@Getter
+@Setter
 public class User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	@Column(unique = true, nullable = false)	
-	private String username;
-	
-	@JsonIgnore
-	private String password;
-	
-	private Boolean active;
 
-	@OneToMany(mappedBy = "users")
-	private List<UserRoleAssignment> roles = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	public Integer getId() {
-		return id;
-	}
+    @Column(unique = true, nullable = false)
+    private String username;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @JsonIgnore
+    private String password;
 
-	public String getUsername() {
-		return username;
-	}
+    private Boolean active;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    @OneToMany(mappedBy = "users")
+    private List<UserRoleAssignment> roles = new ArrayList<>();
 
-	public String getPassword() {
-		return password;
-	}
+    @ManyToOne
+    @JoinColumn
+    private Employee employee;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-	public List<UserRoleAssignment> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<UserRoleAssignment> roles) {
-		this.roles = roles;
-	}
-
-	
 
 }

@@ -36,4 +36,10 @@ public class BillDetail {
     @JoinColumn(nullable = false)
     @NotNull
     private Bill bill;
+
+    public Integer getFinalSellPrice() {
+        if (this.discountAmount == 0)
+            return this.sellPrice;
+        return this.sellPrice - this.discountAmount;
+    }
 }

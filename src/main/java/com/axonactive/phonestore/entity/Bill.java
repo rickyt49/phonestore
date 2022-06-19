@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,4 +31,18 @@ public class Bill {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @OneToMany(mappedBy = "bill", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<BillDetail> billDetails;
+
+    public void setTotalSellPrice() {
+        int totalPrice = 0;
+        if (null == this.billDetails) {
+            this.totalSellPrice = 0;
+        } else {
+            for (BillDetail billDetail : this.billDetails) {
+                totalPrice += billDetail.getFinalSellPrice();
+            }
+        this.totalSellPrice = totalPrice;
+        }
+    }
 }

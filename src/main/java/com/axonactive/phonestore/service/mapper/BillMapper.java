@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BillMapper {
 //    BillMapper INSTANCE = Mappers.getMapper(BillMapper.class);
-
+x
 
     @Mapping(target = "employeeFullName", expression = "java(bill.getEmployee().getFirstName() + \" \" + bill.getEmployee().getLastName())")
     @Mapping(target = "customerName", source = "bill.customer.fullName")

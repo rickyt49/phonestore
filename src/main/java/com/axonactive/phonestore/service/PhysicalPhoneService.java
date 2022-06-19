@@ -2,6 +2,7 @@ package com.axonactive.phonestore.service;
 
 import com.axonactive.phonestore.api.request.PhysicalPhoneRequest;
 import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.service.dto.PhoneModelAndAmountDto;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 
 import java.util.List;
@@ -22,5 +23,8 @@ public interface PhysicalPhoneService {
     List<PhysicalPhoneDto> findAllAvailablePhone();
 
     List<PhysicalPhoneDto> findAllAvailablePhoneByStore(Integer storeId);
+
+    List<PhoneModelAndAmountDto> getPhoneModelAndItsAmount();
+
 
 }
