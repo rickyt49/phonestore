@@ -12,5 +12,5 @@ import java.util.List;
 public class BillRequest {
     private Integer employeeId;
     private Integer customerId;
-        private List<BillDetailUpdateRequest> billDetailsDto;
+    private List<BillDetailUpdateRequest> billDetailsRequest;
 }

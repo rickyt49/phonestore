@@ -34,7 +34,6 @@ public class BillDetail {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @NotNull
     private Bill bill;
 
     public Integer getFinalSellPrice() {

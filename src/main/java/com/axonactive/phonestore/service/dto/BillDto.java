@@ -15,6 +15,6 @@ public class BillDto {
     private String employeeFullName;
     private String customerName;
     private LocalDate saleDate;
-    private List<BillDetailDto> billDetail;
+    private List<BillDetailDto> billDetails;
     private Integer totalSellPrice;
 }

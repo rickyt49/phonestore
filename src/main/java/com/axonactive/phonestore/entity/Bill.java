@@ -31,7 +31,7 @@ public class Bill {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "bill",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillDetail> billDetails;
 
     public void setTotalSellPrice() {
@@ -42,7 +42,7 @@ public class Bill {
             for (BillDetail billDetail : this.billDetails) {
                 totalPrice += billDetail.getFinalSellPrice();
             }
-        this.totalSellPrice = totalPrice;
+            this.totalSellPrice = totalPrice;
         }
     }
 }
