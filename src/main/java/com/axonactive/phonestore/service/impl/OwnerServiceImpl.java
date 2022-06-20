@@ -2,7 +2,7 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.OwnerRequest;
 import com.axonactive.phonestore.entity.Owner;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.OwnerRepository;
 import com.axonactive.phonestore.service.OwnerService;
 import com.axonactive.phonestore.service.dto.OwnerDto;
@@ -25,8 +25,8 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerDto findById(Integer id) throws ResourceNotFoundException {
-        return ownerMapper.toDto(ownerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Owner Not Found: " + id)));
+    public OwnerDto findById(Integer id) throws EntityNotFoundException {
+        return ownerMapper.toDto(ownerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Owner Not Found: " + id)));
     }
 
     @Override
@@ -44,8 +44,8 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerDto update(Integer id, OwnerRequest ownerRequest) throws ResourceNotFoundException {
-        Owner updatedOwner = ownerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Owner not found: " + id));
+    public OwnerDto update(Integer id, OwnerRequest ownerRequest) throws EntityNotFoundException {
+        Owner updatedOwner = ownerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Owner not found: " + id));
         updatedOwner.setFullName(ownerRequest.getFullName());
         updatedOwner.setAddress(ownerRequest.getAddress());
         updatedOwner.setPhoneNumber(ownerRequest.getPhoneNumber());

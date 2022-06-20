@@ -2,7 +2,7 @@ package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.BillDetailRequest;
 import com.axonactive.phonestore.api.request.BillDetailUpdateRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.BillDetailService;
 import com.axonactive.phonestore.service.dto.BillDetailDto;
 import com.axonactive.phonestore.service.mapper.BillDetailMapper;
@@ -29,24 +29,24 @@ public class BillDetailResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BillDetailDto> findBillDetailById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<BillDetailDto> findBillDetailById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(billDetailService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<BillDetailDto> add(@RequestBody BillDetailRequest billDetailRequest) throws ResourceNotFoundException {
+    public ResponseEntity<BillDetailDto> add(@RequestBody BillDetailRequest billDetailRequest) throws EntityNotFoundException {
         BillDetailDto createdBillDetail = billDetailService.save(billDetailRequest);
         return ResponseEntity.created(URI.create(BillDetailResource.PATH + "/" + createdBillDetail.getId())).body(createdBillDetail);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         billDetailService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BillDetailDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillDetailUpdateRequest billDetailUpdateRequest) throws ResourceNotFoundException {
+    public ResponseEntity<BillDetailDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillDetailUpdateRequest billDetailUpdateRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(billDetailService.update(id, billDetailUpdateRequest));
     }
 }

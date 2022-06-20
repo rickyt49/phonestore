@@ -1,13 +1,11 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.StoreRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.BillService;
 import com.axonactive.phonestore.service.PhysicalPhoneService;
 import com.axonactive.phonestore.service.StoreService;
-import com.axonactive.phonestore.service.dto.BillDto;
-import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
-import com.axonactive.phonestore.service.dto.StoreDto;
+import com.axonactive.phonestore.service.dto.*;
 import com.axonactive.phonestore.service.mapper.StoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +37,12 @@ public class StoreResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StoreDto> findStoreById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<StoreDto> findStoreById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(storeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<StoreDto> add(@RequestBody StoreRequest storeRequest) throws ResourceNotFoundException {
+    public ResponseEntity<StoreDto> add(@RequestBody StoreRequest storeRequest) throws EntityNotFoundException {
         StoreDto createdStore = storeService.save(storeRequest);
         return ResponseEntity.created(URI.create(StoreResource.PATH + "/" + createdStore.getId())).body(createdStore);
     }
@@ -56,7 +54,7 @@ public class StoreResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StoreDto> update(@PathVariable(value = "id") Integer id, @RequestBody StoreRequest storeRequest) throws ResourceNotFoundException {
+    public ResponseEntity<StoreDto> update(@PathVariable(value = "id") Integer id, @RequestBody StoreRequest storeRequest) throws EntityNotFoundException {
 
         return ResponseEntity.ok(storeService.update(id, storeRequest));
     }
@@ -67,18 +65,18 @@ public class StoreResource {
     }
 
     @GetMapping("/{id}/bills")
-    public ResponseEntity<List<BillDto>> getAllBillByStore(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) throws ResourceNotFoundException {
+    public ResponseEntity<List<BillDto>> getAllBillByStore(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) throws EntityNotFoundException {
         if (startDate == null && endDate == null) {
             return ResponseEntity.ok(billService.findAllBillByStore(id));
         }
         if (startDate == null) {
-            return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateBefore(id, LocalDate.parse(endDate)));
+            return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateBefore(id, LocalDate.parse(endDate)));
         }
         if (endDate == null) {
             return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateAfter(id, LocalDate.parse(startDate)));
         }
 
-        return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
+        return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
     }
 
     @GetMapping("/{id}/profit")
@@ -93,5 +91,15 @@ public class StoreResource {
             return billService.getTotalGrossProfitAfter(id, LocalDate.parse(startDate));
         }
         return billService.getTotalGrossProfitBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
+    @GetMapping("/{id}/stockreport")
+    public List<PhoneModelAndAmountDto> getStockReportByStore(@PathVariable("id") Integer storeId) {
+        return storeService.getPhoneModelAndItsAmountByStoreId(storeId);
+    }
+
+    @GetMapping("/{id}/customerreport")
+    public List<CustomerAndTotalPurchaseDto> getCustomerPurchaseReportByStore(@PathVariable("id") Integer storeId) {
+        return storeService.getCustomerTotalPurchaseReportByStoreId(storeId);
     }
 }

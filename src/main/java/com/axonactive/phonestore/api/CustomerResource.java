@@ -1,7 +1,7 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.CustomerRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.CustomerService;
 import com.axonactive.phonestore.service.dto.CustomerDto;
 import com.axonactive.phonestore.service.mapper.CustomerMapper;
@@ -28,7 +28,7 @@ public class CustomerResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> findCustomerById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<CustomerDto> findCustomerById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(customerService.findById(id));
     }
 
@@ -45,7 +45,7 @@ public class CustomerResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDto> update(@PathVariable(value = "id") Integer id, @RequestBody CustomerRequest customerRequest) throws ResourceNotFoundException {
+    public ResponseEntity<CustomerDto> update(@PathVariable(value = "id") Integer id, @RequestBody CustomerRequest customerRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(customerService.update(id, customerRequest));
     }
 

@@ -19,6 +19,5 @@ public interface PhysicalPhoneRepository extends JpaRepository<PhysicalPhone, In
     @Query("FROM PhysicalPhone p WHERE p.phoneStatus = 'AVAILABLE' AND p.store.id = ?1")
     List<PhysicalPhone> findAllAvailablePhoneByStore(Integer storeId);
 
-    @Query("SELECT new com.axonactive.phonestore.service.dto.PhoneModelAndAmountDto(s.model, count (p.id)) FROM PhysicalPhone p, Specification s WHERE p.specification.model = s.model GROUP BY s.model")
-    List<PhoneModelAndAmountDto> getPhoneModelAndItsAmount();
+
 }

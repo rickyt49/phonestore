@@ -2,7 +2,7 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.SpecificationRequest;
 import com.axonactive.phonestore.entity.Specification;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.SpecificationRepository;
 import com.axonactive.phonestore.service.SpecificationService;
 import com.axonactive.phonestore.service.dto.SpecificationDto;
@@ -26,8 +26,8 @@ public class SpecificationServiceImpl implements SpecificationService {
     }
 
     @Override
-    public SpecificationDto findById(Integer id) throws ResourceNotFoundException {
-        return specificationMapper.toDto(specificationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Specification not found: " + id)));
+    public SpecificationDto findById(Integer id) throws EntityNotFoundException {
+        return specificationMapper.toDto(specificationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Specification not found: " + id)));
     }
 
     @Override
@@ -54,8 +54,8 @@ public class SpecificationServiceImpl implements SpecificationService {
     }
 
     @Override
-    public SpecificationDto update(Integer id, SpecificationRequest specificationRequest) throws ResourceNotFoundException {
-        Specification updatedSpec = specificationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Specification not found: " + id));
+    public SpecificationDto update(Integer id, SpecificationRequest specificationRequest) throws EntityNotFoundException {
+        Specification updatedSpec = specificationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Specification not found: " + id));
         updatedSpec.setModel(specificationRequest.getModel());
         updatedSpec.setCpu(specificationRequest.getCpu());
         updatedSpec.setGpu(specificationRequest.getGpu());

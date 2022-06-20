@@ -2,10 +2,12 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.StoreRequest;
 import com.axonactive.phonestore.entity.Store;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.OwnerRepository;
 import com.axonactive.phonestore.repository.StoreRepository;
 import com.axonactive.phonestore.service.StoreService;
+import com.axonactive.phonestore.service.dto.CustomerAndTotalPurchaseDto;
+import com.axonactive.phonestore.service.dto.PhoneModelAndAmountDto;
 import com.axonactive.phonestore.service.dto.StoreDto;
 import com.axonactive.phonestore.service.mapper.StoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +32,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreDto findById(Integer id) throws ResourceNotFoundException {
-        return storeMapper.toDto(storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + id)));
+    public StoreDto findById(Integer id) throws EntityNotFoundException {
+        return storeMapper.toDto(storeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Store not found: " + id)));
     }
 
     @Override
-    public StoreDto save(StoreRequest storeRequest) throws ResourceNotFoundException {
+    public StoreDto save(StoreRequest storeRequest) throws EntityNotFoundException {
         Store createdStore = new Store();
         createdStore.setName(storeRequest.getName());
         createdStore.setPhoneNumber(storeRequest.getPhoneNumber());
         createdStore.setCity(storeRequest.getCity());
-        createdStore.setOwner(ownerRepository.findById(storeRequest.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Owner Not Found: " + storeRequest.getOwnerId())));
+        createdStore.setOwner(ownerRepository.findById(storeRequest.getOwnerId()).orElseThrow(() -> new EntityNotFoundException("Owner Not Found: " + storeRequest.getOwnerId())));
         createdStore.setAddress(storeRequest.getAddress());
         return storeMapper.toDto(storeRepository.save(createdStore));
     }
@@ -51,13 +53,23 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreDto update(Integer id, StoreRequest storeRequest) throws ResourceNotFoundException {
-        Store updatedStore = storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store not found: " + id));
-        updatedStore.setOwner(ownerRepository.findById(storeRequest.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Owner Not Found: " + storeRequest.getOwnerId())));
+    public StoreDto update(Integer id, StoreRequest storeRequest) throws EntityNotFoundException {
+        Store updatedStore = storeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Store not found: " + id));
+        updatedStore.setOwner(ownerRepository.findById(storeRequest.getOwnerId()).orElseThrow(() -> new EntityNotFoundException("Owner Not Found: " + storeRequest.getOwnerId())));
         updatedStore.setName(storeRequest.getName());
         updatedStore.setAddress(storeRequest.getAddress());
         updatedStore.setCity(storeRequest.getCity());
         updatedStore.setPhoneNumber(storeRequest.getPhoneNumber());
         return storeMapper.toDto(storeRepository.save(updatedStore));
+    }
+
+    @Override
+    public List<PhoneModelAndAmountDto> getPhoneModelAndItsAmountByStoreId(Integer storeId) {
+        return storeRepository.getPhoneModelAndItsAmountByStoreId(storeId);
+    }
+
+    @Override
+    public List<CustomerAndTotalPurchaseDto> getCustomerTotalPurchaseReportByStoreId(Integer storeId) {
+        return storeRepository.getCustomerTotalPurchaseReportByStoreId(storeId);
     }
 }

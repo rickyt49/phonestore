@@ -1,7 +1,7 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.OwnerRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.OwnerService;
 import com.axonactive.phonestore.service.dto.OwnerDto;
 import com.axonactive.phonestore.service.mapper.OwnerMapper;
@@ -28,7 +28,7 @@ public class OwnerResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OwnerDto> findOwnerById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<OwnerDto> findOwnerById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(ownerService.findById(id));
     }
 
@@ -45,7 +45,7 @@ public class OwnerResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OwnerDto> update(@PathVariable(value = "id") Integer id, @RequestBody OwnerRequest ownerRequest) throws ResourceNotFoundException {
+    public ResponseEntity<OwnerDto> update(@PathVariable(value = "id") Integer id, @RequestBody OwnerRequest ownerRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(ownerService.update(id, ownerRequest));
     }
 

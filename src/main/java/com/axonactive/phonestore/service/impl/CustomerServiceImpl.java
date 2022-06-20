@@ -2,7 +2,7 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.CustomerRequest;
 import com.axonactive.phonestore.entity.Customer;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.CustomerRepository;
 import com.axonactive.phonestore.service.CustomerService;
 import com.axonactive.phonestore.service.dto.CustomerDto;
@@ -27,8 +27,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto findById(Integer id) throws ResourceNotFoundException {
-        return customerMapper.toDto(customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found: " + id)));
+    public CustomerDto findById(Integer id) throws EntityNotFoundException {
+        return customerMapper.toDto(customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Customer not found: " + id)));
     }
 
     @Override
@@ -46,8 +46,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto update(Integer id, CustomerRequest customerRequest) throws ResourceNotFoundException {
-        Customer updatedCustomer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found: " + id));
+    public CustomerDto update(Integer id, CustomerRequest customerRequest) throws EntityNotFoundException {
+        Customer updatedCustomer = customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Customer not found: " + id));
         updatedCustomer.setFullName(customerRequest.getFullName());
         updatedCustomer.setAddress(customerRequest.getAddress());
         updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());

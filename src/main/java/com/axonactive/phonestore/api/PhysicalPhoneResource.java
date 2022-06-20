@@ -1,7 +1,7 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.PhysicalPhoneRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.PhysicalPhoneService;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import com.axonactive.phonestore.service.mapper.PhysicalPhoneMapper;
@@ -29,12 +29,12 @@ public class PhysicalPhoneResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(physicalPhoneService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<PhysicalPhoneDto> add(@RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws ResourceNotFoundException {
+    public ResponseEntity<PhysicalPhoneDto> add(@RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
         PhysicalPhoneDto addedPhone = physicalPhoneService.save(physicalPhoneRequest);
         return ResponseEntity.created(URI.create(PhysicalPhoneResource.PATH + "/" + addedPhone.getId())).body(addedPhone);
     }
@@ -46,7 +46,7 @@ public class PhysicalPhoneResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PhysicalPhoneDto> update(@PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws ResourceNotFoundException {
+    public ResponseEntity<PhysicalPhoneDto> update(@PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(physicalPhoneService.update(id, physicalPhoneRequest));
     }
 

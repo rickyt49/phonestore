@@ -1,7 +1,7 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.SpecificationRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.SpecificationService;
 import com.axonactive.phonestore.service.dto.SpecificationDto;
 import com.axonactive.phonestore.service.mapper.SpecificationMapper;
@@ -27,7 +27,7 @@ public class SpecificationResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SpecificationDto> findSpecificationById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<SpecificationDto> findSpecificationById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(specificationService.findById(id));
     }
 
@@ -38,7 +38,7 @@ public class SpecificationResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SpecificationDto> update(@PathVariable(value = "id") Integer id, @RequestBody SpecificationRequest specificationRequest) throws ResourceNotFoundException {
+    public ResponseEntity<SpecificationDto> update(@PathVariable(value = "id") Integer id, @RequestBody SpecificationRequest specificationRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(specificationService.update(id, specificationRequest));
     }
 

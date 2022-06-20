@@ -16,7 +16,6 @@ public interface    BillMapper {
     @Mapping(target = "employeeFullName", expression = "java(bill.getEmployee().getFirstName() + \" \" + bill.getEmployee().getLastName())")
     @Mapping(target = "customerName", source = "bill.customer.fullName")
     BillDto toDto(Bill bill);
-
     List<BillDto> toDtos(List<Bill> bills);
 
     @Mapping(source = "billDetail.physicalPhone.imei", target = "imei")

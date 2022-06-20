@@ -1,7 +1,8 @@
 package com.axonactive.phonestore.service;
 
 import com.axonactive.phonestore.api.request.BillRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.BusinessLogicException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.dto.BillDto;
 
 import java.time.LocalDate;
@@ -10,13 +11,13 @@ import java.util.List;
 public interface BillService {
     List<BillDto> getAll();
 
-    BillDto findById(Integer id) throws ResourceNotFoundException;
+    BillDto findById(Integer id) throws EntityNotFoundException;
 
-    BillDto save(BillRequest bill) throws ResourceNotFoundException;
+    BillDto save(BillRequest bill) throws EntityNotFoundException, BusinessLogicException;
 
-    void delete(Integer id);
+    void delete(Integer id) throws EntityNotFoundException;
 
-    BillDto update(Integer id, BillRequest billRequest) throws ResourceNotFoundException;
+    BillDto update(Integer id, BillRequest billRequest) throws EntityNotFoundException, BusinessLogicException;
 
     List<BillDto> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate);
 

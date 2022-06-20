@@ -2,7 +2,7 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.SupplierRequest;
 import com.axonactive.phonestore.entity.Supplier;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.SupplierRepository;
 import com.axonactive.phonestore.service.SupplierService;
 import com.axonactive.phonestore.service.dto.SupplierDto;
@@ -26,8 +26,8 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public SupplierDto findById(Integer id) throws ResourceNotFoundException {
-        return supplierMapper.toDto(supplierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + id)));
+    public SupplierDto findById(Integer id) throws EntityNotFoundException {
+        return supplierMapper.toDto(supplierRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Supplier not found: " + id)));
     }
 
     @Override
@@ -45,8 +45,8 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public SupplierDto update(Integer id, SupplierRequest supplierRequest) throws ResourceNotFoundException {
-        Supplier updatedSupplier = supplierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found: " + id));
+    public SupplierDto update(Integer id, SupplierRequest supplierRequest) throws EntityNotFoundException {
+        Supplier updatedSupplier = supplierRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Supplier not found: " + id));
         updatedSupplier.setFullName(supplierRequest.getFullName());
         updatedSupplier.setAddress(supplierRequest.getAddress());
         updatedSupplier.setPhoneNumber(supplierRequest.getPhoneNumber());

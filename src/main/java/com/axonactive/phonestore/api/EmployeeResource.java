@@ -1,7 +1,7 @@
 package com.axonactive.phonestore.api;
 
 import com.axonactive.phonestore.api.request.EmployeeRequest;
-import com.axonactive.phonestore.exception.ResourceNotFoundException;
+import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.BillService;
 import com.axonactive.phonestore.service.EmployeeService;
 import com.axonactive.phonestore.service.dto.BillDto;
@@ -33,12 +33,12 @@ public class EmployeeResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(employeeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDto> add(@RequestBody EmployeeRequest employeeRequest) throws ResourceNotFoundException {
+    public ResponseEntity<EmployeeDto> add(@RequestBody EmployeeRequest employeeRequest) throws EntityNotFoundException {
         EmployeeDto createdEmployee = employeeService.save(employeeRequest);
         return ResponseEntity.created(URI.create(EmployeeResource.PATH + "/" + createdEmployee.getId())).body(createdEmployee);
     }
@@ -50,7 +50,7 @@ public class EmployeeResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Integer id, @RequestBody EmployeeRequest employeeRequest) throws ResourceNotFoundException {
+    public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Integer id, @RequestBody EmployeeRequest employeeRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(employeeService.update(id, employeeRequest));
     }
 
