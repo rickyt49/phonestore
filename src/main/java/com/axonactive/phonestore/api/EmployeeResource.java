@@ -7,6 +7,7 @@ import com.axonactive.phonestore.service.EmployeeService;
 import com.axonactive.phonestore.service.dto.BillDto;
 import com.axonactive.phonestore.service.dto.EmployeeDto;
 import com.axonactive.phonestore.service.mapper.EmployeeMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+
+@Slf4j
 @RestController
 @RequestMapping(EmployeeResource.PATH)
 public class EmployeeResource {
@@ -67,5 +70,10 @@ public class EmployeeResource {
             return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateBefore(id, LocalDate.parse(endDate)));
         }
         return ResponseEntity.ok(billService.findByEmployeeIdAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<EmployeeDto>> getActiveEmployee() {
+        return ResponseEntity.ok(employeeService.getAllActiveEmployee());
     }
 }

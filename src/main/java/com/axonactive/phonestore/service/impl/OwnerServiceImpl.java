@@ -2,16 +2,19 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.OwnerRequest;
 import com.axonactive.phonestore.entity.Owner;
+import com.axonactive.phonestore.exception.BusinessLogicException;
 import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.OwnerRepository;
 import com.axonactive.phonestore.service.OwnerService;
 import com.axonactive.phonestore.service.dto.OwnerDto;
 import com.axonactive.phonestore.service.mapper.OwnerMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class OwnerServiceImpl implements OwnerService {
     @Autowired
@@ -26,7 +29,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public OwnerDto findById(Integer id) throws EntityNotFoundException {
-        return ownerMapper.toDto(ownerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Owner Not Found: " + id)));
+        return ownerMapper.toDto(ownerRepository.findById(id).orElseThrow(BusinessLogicException::OwnerNotFound));
     }
 
     @Override
@@ -45,7 +48,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public OwnerDto update(Integer id, OwnerRequest ownerRequest) throws EntityNotFoundException {
-        Owner updatedOwner = ownerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Owner not found: " + id));
+        Owner updatedOwner = ownerRepository.findById(id).orElseThrow(BusinessLogicException::OwnerNotFound);
         updatedOwner.setFullName(ownerRequest.getFullName());
         updatedOwner.setAddress(ownerRequest.getAddress());
         updatedOwner.setPhoneNumber(ownerRequest.getPhoneNumber());

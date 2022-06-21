@@ -1,6 +1,6 @@
-package com.axonactive.phonestore.api;
+package com.axonactive.phonestore.service.impl;
 
-import com.axonactive.phonestore.service.StoreService;
+import com.axonactive.phonestore.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class StoreResourceTest {
+class EmployeeServiceImplTest {
+
     @Autowired
-    StoreService storeService;
+    EmployeeService employeeService;
 
     @Test
-    void getCustomerPurchaseReportByStore() {
-        assertNotEquals(0, storeService.getCustomerTotalPurchaseReportByStoreId(1).size());
+    void testGetAllActiveEmployee_shouldReturnValueDifferFrom0_whenUsed() {
+        assertNotEquals(0, employeeService.getAllActiveEmployee().size());
     }
 }

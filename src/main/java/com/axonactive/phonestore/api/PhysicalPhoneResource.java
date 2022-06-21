@@ -5,13 +5,17 @@ import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.PhysicalPhoneService;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import com.axonactive.phonestore.service.mapper.PhysicalPhoneMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+
+@Slf4j
 @RestController
 @RequestMapping(PhysicalPhoneResource.PATH)
 public class PhysicalPhoneResource {
@@ -19,37 +23,41 @@ public class PhysicalPhoneResource {
     @Autowired
     private PhysicalPhoneService physicalPhoneService;
 
-    @Autowired
-    private PhysicalPhoneMapper physicalPhoneMapper;
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<PhysicalPhoneDto>> getAll() {
         return ResponseEntity.ok(physicalPhoneService.getAll());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping("/{id}")
     public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
         return ResponseEntity.ok(physicalPhoneService.findById(id));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PostMapping
     public ResponseEntity<PhysicalPhoneDto> add(@RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
         PhysicalPhoneDto addedPhone = physicalPhoneService.save(physicalPhoneRequest);
         return ResponseEntity.created(URI.create(PhysicalPhoneResource.PATH + "/" + addedPhone.getId())).body(addedPhone);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) {
         physicalPhoneService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PutMapping("/{id}")
     public ResponseEntity<PhysicalPhoneDto> update(@PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(physicalPhoneService.update(id, physicalPhoneRequest));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping("/available")
     public ResponseEntity<List<PhysicalPhoneDto>> getAvailablePhone() {
         return ResponseEntity.ok(physicalPhoneService.findAllAvailablePhone());

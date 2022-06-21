@@ -7,7 +7,9 @@ import com.axonactive.phonestore.service.PhysicalPhoneService;
 import com.axonactive.phonestore.service.StoreService;
 import com.axonactive.phonestore.service.dto.*;
 import com.axonactive.phonestore.service.mapper.StoreMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(StoreResource.PATH)
 public class StoreResource {
@@ -65,32 +68,31 @@ public class StoreResource {
     }
 
     @GetMapping("/{id}/bills")
-    public ResponseEntity<List<BillDto>> getAllBillByStore(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) throws EntityNotFoundException {
+    public ResponseEntity<List<BillDto>> getAllBillByStore(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         if (startDate == null && endDate == null) {
             return ResponseEntity.ok(billService.findAllBillByStore(id));
         }
         if (startDate == null) {
-            return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateBefore(id, LocalDate.parse(endDate)));
+            return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateBefore(id, endDate));
         }
         if (endDate == null) {
-            return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateAfter(id, LocalDate.parse(startDate)));
+            return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateAfter(id, startDate));
         }
-
-        return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate)));
+        return ResponseEntity.ok(billService.findAllBillByStoreAndSaleDateBetween(id, startDate, endDate));
     }
 
     @GetMapping("/{id}/profit")
-    public Integer getGrossProfit(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) String startDate, @RequestParam(value = "endDate", required = false) String endDate) {
-        if (startDate == null && endDate == null) {
+    public Integer getGrossProfit(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        if ((startDate == null) && (endDate == null)) {
             return billService.getTotalGrossProfit(id);
         }
         if (startDate == null) {
-            return billService.getTotalGrossProfitBefore(id, LocalDate.parse(endDate));
+            return billService.getTotalGrossProfitBefore(id, endDate);
         }
         if (endDate == null) {
-            return billService.getTotalGrossProfitAfter(id, LocalDate.parse(startDate));
+            return billService.getTotalGrossProfitAfter(id, startDate);
         }
-        return billService.getTotalGrossProfitBetween(id, LocalDate.parse(startDate), LocalDate.parse(endDate));
+        return billService.getTotalGrossProfitBetween(id, startDate, endDate);
     }
 
     @GetMapping("/{id}/stockreport")
@@ -102,4 +104,6 @@ public class StoreResource {
     public List<CustomerAndTotalPurchaseDto> getCustomerPurchaseReportByStore(@PathVariable("id") Integer storeId) {
         return storeService.getCustomerTotalPurchaseReportByStoreId(storeId);
     }
+
+
 }

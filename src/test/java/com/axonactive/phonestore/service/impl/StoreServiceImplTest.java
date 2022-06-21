@@ -24,4 +24,9 @@ class StoreServiceImplTest {
         assertNotNull(storeService.getPhoneModelAndItsAmountByStoreId(1));
 
     }
+
+    @Test
+    void getCustomerPurchaseReportByStore_shouldReturnValueDifferFrom0_whenInputStoreId1() {
+        assertNotEquals(0, storeService.getCustomerTotalPurchaseReportByStoreId(1).size());
+    }
 }

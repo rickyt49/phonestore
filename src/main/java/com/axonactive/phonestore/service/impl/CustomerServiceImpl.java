@@ -2,16 +2,20 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.CustomerRequest;
 import com.axonactive.phonestore.entity.Customer;
+import com.axonactive.phonestore.exception.BusinessLogicException;
 import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.CustomerRepository;
 import com.axonactive.phonestore.service.CustomerService;
 import com.axonactive.phonestore.service.dto.CustomerDto;
 import com.axonactive.phonestore.service.mapper.CustomerMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -28,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto findById(Integer id) throws EntityNotFoundException {
-        return customerMapper.toDto(customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Customer not found: " + id)));
+        return customerMapper.toDto(customerRepository.findById(id).orElseThrow(BusinessLogicException::CustomerNotFound));
     }
 
     @Override
@@ -47,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto update(Integer id, CustomerRequest customerRequest) throws EntityNotFoundException {
-        Customer updatedCustomer = customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Customer not found: " + id));
+        Customer updatedCustomer = customerRepository.findById(id).orElseThrow(BusinessLogicException::CustomerNotFound);
         updatedCustomer.setFullName(customerRequest.getFullName());
         updatedCustomer.setAddress(customerRequest.getAddress());
         updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());

@@ -2,17 +2,21 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.EmployeeRequest;
 import com.axonactive.phonestore.entity.Employee;
+import com.axonactive.phonestore.exception.BusinessLogicException;
 import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.EmployeeRepository;
 import com.axonactive.phonestore.repository.StoreRepository;
 import com.axonactive.phonestore.service.EmployeeService;
 import com.axonactive.phonestore.service.dto.EmployeeDto;
 import com.axonactive.phonestore.service.mapper.EmployeeMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Slf4j
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -32,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto findById(Integer id) throws EntityNotFoundException {
-        return employeeMapper.toDto(employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Employee not found: " + id)));
+        return employeeMapper.toDto(employeeRepository.findById(id).orElseThrow(BusinessLogicException::EmployeeNotFound));
     }
 
     @Override
@@ -47,7 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         createdEmployee.setEmployeeType(employeeRequest.getEmployeeType());
         createdEmployee.setEmployeeStatus(employeeRequest.getEmployeeStatus());
         createdEmployee.setManagerId(employeeRequest.getManagerId());
-        createdEmployee.setStore(storeRepository.findById(employeeRequest.getStoreId()).orElseThrow(() -> new EntityNotFoundException("Store not found: " + employeeRequest.getStoreId())));
+        createdEmployee.setStore(storeRepository.findById(employeeRequest.getStoreId()).orElseThrow(BusinessLogicException::EmployeeNotFound));
         return employeeMapper.toDto(employeeRepository.save(createdEmployee));
     }
 
@@ -58,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto update(Integer id, EmployeeRequest employeeRequest) throws EntityNotFoundException {
-        Employee updatedEmployee = employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Employee not found: " + id));
+        Employee updatedEmployee = employeeRepository.findById(id).orElseThrow(BusinessLogicException::EmployeeNotFound);
         updatedEmployee.setFirstName(employeeRequest.getFirstName());
         updatedEmployee.setLastName(employeeRequest.getLastName());
         updatedEmployee.setGender(employeeRequest.getGender());
@@ -68,8 +72,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         updatedEmployee.setEmployeeType(employeeRequest.getEmployeeType());
         updatedEmployee.setManagerId(employeeRequest.getManagerId());
         updatedEmployee.setEmployeeStatus(employeeRequest.getEmployeeStatus());
-        updatedEmployee.setStore(storeRepository.findById(employeeRequest.getStoreId()).orElseThrow(() -> new EntityNotFoundException("Store not found: " + employeeRequest.getStoreId())));
+        updatedEmployee.setStore(storeRepository.findById(employeeRequest.getStoreId()).orElseThrow(BusinessLogicException::StoreNotFound));
 
         return employeeMapper.toDto(employeeRepository.save(updatedEmployee));
     }
+
+    @Override
+    public List<EmployeeDto> getAllActiveEmployee() {
+        return employeeMapper.toDtos(employeeRepository.getAllActiveEmployee());
+    }
+
 }

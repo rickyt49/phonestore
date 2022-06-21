@@ -4,7 +4,9 @@ import com.axonactive.phonestore.api.request.BillRequest;
 import com.axonactive.phonestore.exception.BusinessLogicException;
 import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.dto.BillDto;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,11 +15,11 @@ public interface BillService {
 
     BillDto findById(Integer id) throws EntityNotFoundException;
 
-    BillDto save(BillRequest bill) throws EntityNotFoundException, BusinessLogicException;
+    BillDto save(BillRequest bill) throws EntityNotFoundException;
 
     void delete(Integer id) throws EntityNotFoundException;
 
-    BillDto update(Integer id, BillRequest billRequest) throws EntityNotFoundException, BusinessLogicException;
+    BillDto update(Integer id, BillRequest billRequest) throws EntityNotFoundException;
 
     List<BillDto> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate);
 
@@ -40,9 +42,9 @@ public interface BillService {
 
     Integer getTotalGrossProfitAfter(Integer storeId, LocalDate startDate);
 
-    Integer getTotalGrossProfitBefore(Integer storeId, LocalDate endDate);
+    Integer getTotalGrossProfitBefore(Integer storeId,  LocalDate endDate);
 
-    Integer getTotalGrossProfitBetween(Integer storeId, LocalDate startDate, LocalDate endDate);
+    Integer getTotalGrossProfitBetween(Integer storeId, LocalDate startDate,LocalDate endDate);
 
 
 }

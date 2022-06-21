@@ -5,6 +5,7 @@ import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.SupplierService;
 import com.axonactive.phonestore.service.dto.SupplierDto;
 import com.axonactive.phonestore.service.mapper.SupplierMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@RestController
+@Slf4j
 @RequestMapping(SupplierResource.PATH)
 public class SupplierResource {
     public static final String PATH = "/api/suppliers";

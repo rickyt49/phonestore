@@ -17,7 +17,7 @@ public interface StoreService {
 
     void delete(Integer id);
 
-    StoreDto update(Integer id, StoreRequest storeRequest) throws EntityNotFoundException;
+    StoreDto update(Integer id, StoreRequest storeRequest);
 
     List<PhoneModelAndAmountDto> getPhoneModelAndItsAmountByStoreId(Integer storeId);
     List<CustomerAndTotalPurchaseDto> getCustomerTotalPurchaseReportByStoreId(Integer storeId);

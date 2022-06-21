@@ -16,6 +16,7 @@ import com.axonactive.phonestore.service.BillDetailService;
 import com.axonactive.phonestore.service.BillService;
 import com.axonactive.phonestore.service.dto.BillDto;
 import com.axonactive.phonestore.service.mapper.BillMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 
 
@@ -53,27 +55,26 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillDto findById(Integer id) throws EntityNotFoundException {
-        return billMapper.toDto(billRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Bill not found: " + id)));
+        return billMapper.toDto(billRepository.findById(id).orElseThrow(BusinessLogicException::BillNotFound));
     }
 
     @Override
-    public BillDto save(BillRequest billRequest) throws EntityNotFoundException, BusinessLogicException {
+    public BillDto save(BillRequest billRequest) throws EntityNotFoundException {
         Bill bill = new Bill();
         List<BillDetail> billDetailList = new ArrayList<>();
-        bill.setCustomer(customerRepository.findById(billRequest.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Customer not found! " + billRequest.getCustomerId())));
-        bill.setEmployee(employeeRepository.findById(billRequest.getEmployeeId()).orElseThrow(() -> new EntityNotFoundException("Employee not found! " + billRequest.getEmployeeId())));
+        bill.setCustomer(customerRepository.findById(billRequest.getCustomerId()).orElseThrow(BusinessLogicException::CustomerNotFound));
+        bill.setEmployee(employeeRepository.findById(billRequest.getEmployeeId()).orElseThrow(BusinessLogicException::EmployeeNotFound));
         for (BillDetailUpdateRequest billDetailUpdateRequest : billRequest.getBillDetailsRequest()) {
             BillDetail billDetail = new BillDetail();
-            PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(billDetailUpdateRequest.getImei()).orElseThrow(() -> new EntityNotFoundException("Phone not found: " + billDetailUpdateRequest.getImei()));
+            PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(billDetailUpdateRequest.getImei()).orElseThrow(BusinessLogicException::PhoneNotFound);
             foundPhone.setPhoneStatus(PhoneStatus.SOLD);
             billDetail.setPhysicalPhone(foundPhone);
             billDetail.setSellPrice(billDetailUpdateRequest.getSellPrice());
             billDetail.setDiscountAmount(billDetailUpdateRequest.getDiscountAmount());
             billDetail.setFinalSellPrice(billDetailUpdateRequest.getSellPrice() - billDetailUpdateRequest.getDiscountAmount());
             billDetail.setBill(bill);
-            if (isValidBillDetailCreation(billDetail)) {
-                billDetailList.add(billDetail);
-            } else throw new BusinessLogicException("Phone is not in same store as employee");
+            billDetailList.add(billDetail);
+
         }
         bill.setBillDetails(billDetailList);
         bill.setTotalSellPrice();
@@ -86,36 +87,34 @@ public class BillServiceImpl implements BillService {
         Bill foundBill = billRepository.findById(id).get();
         for (BillDetail billDetail :
                 foundBill.getBillDetails()) {
-            PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(billDetail.getPhysicalPhone().getImei()).orElseThrow(() -> new EntityNotFoundException("Phone not found: " + billDetail.getPhysicalPhone().getImei()));
+            PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(billDetail.getPhysicalPhone().getImei()).orElseThrow(BusinessLogicException::PhoneNotFound);
             foundPhone.setPhoneStatus(PhoneStatus.AVAILABLE);
         }
         billRepository.deleteById(id);
     }
 
     @Override
-    public BillDto update(Integer id, BillRequest billRequest) throws EntityNotFoundException, BusinessLogicException {
-        Bill updatedBill = billRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Bill not found: " + id));
+    public BillDto update(Integer id, BillRequest billRequest) throws EntityNotFoundException {
+        Bill updatedBill = billRepository.findById(id).orElseThrow(BusinessLogicException::BillNotFound);
         List<BillDetail> billDetailList = new ArrayList<>();
         for (BillDetail bD : updatedBill.getBillDetails()) {
             if (!(billRequest.getBillDetailsRequest().stream().map(BillDetailUpdateRequest::getImei).collect(Collectors.toList()).contains(bD.getPhysicalPhone().getImei()))) {
-                PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(bD.getPhysicalPhone().getImei()).orElseThrow(() -> new EntityNotFoundException("Phone not found: " + bD.getPhysicalPhone().getImei()));
+                PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(bD.getPhysicalPhone().getImei()).orElseThrow(BusinessLogicException::PhoneNotFound);
                 foundPhone.setPhoneStatus(PhoneStatus.AVAILABLE);
             }
         }
-        updatedBill.setCustomer(customerRepository.findById(billRequest.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Customer not found! " + billRequest.getCustomerId())));
-        updatedBill.setEmployee(employeeRepository.findById(billRequest.getEmployeeId()).orElseThrow(() -> new EntityNotFoundException("Employee not found! " + billRequest.getEmployeeId())));
+        updatedBill.setCustomer(customerRepository.findById(billRequest.getCustomerId()).orElseThrow(BusinessLogicException::CustomerNotFound));
+        updatedBill.setEmployee(employeeRepository.findById(billRequest.getEmployeeId()).orElseThrow(BusinessLogicException::EmployeeNotFound));
         for (BillDetailUpdateRequest billDetailUpdateRequest : billRequest.getBillDetailsRequest()) {
             BillDetail billDetail = new BillDetail();
-            PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(billDetailUpdateRequest.getImei()).orElseThrow(() -> new EntityNotFoundException("Phone not found: " + billDetailUpdateRequest.getImei()));
+            PhysicalPhone foundPhone = physicalPhoneRepository.findByImei(billDetailUpdateRequest.getImei()).orElseThrow(BusinessLogicException::PhoneNotFound);
             foundPhone.setPhoneStatus(PhoneStatus.SOLD);
             billDetail.setPhysicalPhone(foundPhone);
             billDetail.setSellPrice(billDetailUpdateRequest.getSellPrice());
             billDetail.setDiscountAmount(billDetailUpdateRequest.getDiscountAmount());
             billDetail.setFinalSellPrice(billDetailUpdateRequest.getSellPrice() - billDetailUpdateRequest.getDiscountAmount());
             billDetail.setBill(updatedBill);
-            if (isValidBillDetailCreation(billDetail)) {
-                billDetailList.add(billDetail);
-            } else throw new BusinessLogicException("Phone is not in same store as employee");
+            billDetailList.add(billDetail);
         }
         updatedBill.getBillDetails().clear();
         updatedBill.getBillDetails().addAll(billDetailList);
@@ -191,7 +190,5 @@ public class BillServiceImpl implements BillService {
         return billRepository.getTotalGrossProfitBetween(storeId, startDate, endDate);
     }
 
-    public boolean isValidBillDetailCreation(BillDetail billDetail) {
-        return Objects.equals(billDetail.getBill().getEmployee().getStore().getId(), billDetail.getPhysicalPhone().getStore().getId());
-    }
+
 }

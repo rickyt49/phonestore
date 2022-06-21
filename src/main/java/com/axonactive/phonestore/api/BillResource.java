@@ -6,6 +6,7 @@ import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.BillService;
 import com.axonactive.phonestore.service.dto.BillDto;
 import com.axonactive.phonestore.service.mapper.BillMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(BillResource.PATH)
 public class BillResource {
@@ -34,7 +36,7 @@ public class BillResource {
     }
 
     @PostMapping
-    public ResponseEntity<BillDto> add(@RequestBody BillRequest billRequest) throws EntityNotFoundException, BusinessLogicException {
+    public ResponseEntity<BillDto> add(@RequestBody BillRequest billRequest) throws EntityNotFoundException {
         BillDto createdBill = billService.save(billRequest);
         return ResponseEntity.created(URI.create(BillResource.PATH + "/" + createdBill.getId())).body(createdBill);
     }
@@ -46,7 +48,7 @@ public class BillResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BillDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillRequest billRequest) throws EntityNotFoundException, BusinessLogicException {
+    public ResponseEntity<BillDto> update(@PathVariable(value = "id") Integer id, @RequestBody BillRequest billRequest) throws EntityNotFoundException {
         return ResponseEntity.ok(billService.update(id, billRequest));
     }
 }

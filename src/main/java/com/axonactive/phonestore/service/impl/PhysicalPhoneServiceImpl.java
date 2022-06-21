@@ -2,6 +2,7 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.PhysicalPhoneRequest;
 import com.axonactive.phonestore.entity.PhysicalPhone;
+import com.axonactive.phonestore.exception.BusinessLogicException;
 import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.PhysicalPhoneRepository;
 import com.axonactive.phonestore.repository.SpecificationRepository;
@@ -10,11 +11,13 @@ import com.axonactive.phonestore.repository.SupplierRepository;
 import com.axonactive.phonestore.service.PhysicalPhoneService;
 import com.axonactive.phonestore.service.dto.PhysicalPhoneDto;
 import com.axonactive.phonestore.service.mapper.PhysicalPhoneMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
     @Autowired
@@ -37,7 +40,7 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
 
     @Override
     public PhysicalPhoneDto findById(Integer id) throws EntityNotFoundException {
-        return physicalPhoneMapper.toDto(physicalPhoneRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Phone not found: " + id)));
+        return physicalPhoneMapper.toDto(physicalPhoneRepository.findById(id).orElseThrow(BusinessLogicException::PhoneNotFound));
     }
 
     @Override
@@ -51,9 +54,9 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
         addedPhone.setWarranty(physicalPhoneRequest.getWarranty());
         addedPhone.setImportPrice(physicalPhoneRequest.getImportPrice());
         addedPhone.setImportDate(physicalPhoneRequest.getImportDate());
-        addedPhone.setStore(storeRepository.findById(physicalPhoneRequest.getStoreId()).orElseThrow(() -> new EntityNotFoundException("Store not found: " + physicalPhoneRequest.getStoreId())));
-        addedPhone.setSupplier(supplierRepository.findById(physicalPhoneRequest.getSupplierId()).orElseThrow(() -> new EntityNotFoundException("Supplier not found: " + physicalPhoneRequest.getSupplierId())));
-        addedPhone.setSpecification(specificationRepository.findByModelIgnoreCase(physicalPhoneRequest.getSpecificationModel()).orElseThrow(() -> new EntityNotFoundException("Specification not found: " + physicalPhoneRequest.getSpecificationModel())));
+        addedPhone.setStore(storeRepository.findById(physicalPhoneRequest.getStoreId()).orElseThrow(BusinessLogicException::StoreNotFound));
+        addedPhone.setSupplier(supplierRepository.findById(physicalPhoneRequest.getSupplierId()).orElseThrow(BusinessLogicException::SupplierNotFound));
+        addedPhone.setSpecification(specificationRepository.findByModelIgnoreCase(physicalPhoneRequest.getSpecificationModel()).orElseThrow(BusinessLogicException::SpecificationNotFound));
 
         return physicalPhoneMapper.toDto(physicalPhoneRepository.save(addedPhone));
     }
@@ -65,7 +68,7 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
 
     @Override
     public PhysicalPhoneDto update(Integer id, PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
-        PhysicalPhone updatedPhysicalPhone = physicalPhoneRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Phone not found: " + id));
+        PhysicalPhone updatedPhysicalPhone = physicalPhoneRepository.findById(id).orElseThrow(BusinessLogicException::PhoneNotFound);
         updatedPhysicalPhone.setImei(physicalPhoneRequest.getImei());
         updatedPhysicalPhone.setColor(physicalPhoneRequest.getColor());
         updatedPhysicalPhone.setPhoneStatus(physicalPhoneRequest.getPhoneStatus());
@@ -73,15 +76,15 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
         updatedPhysicalPhone.setWarranty(physicalPhoneRequest.getWarranty());
         updatedPhysicalPhone.setImportPrice(physicalPhoneRequest.getImportPrice());
         updatedPhysicalPhone.setImportDate(physicalPhoneRequest.getImportDate());
-        updatedPhysicalPhone.setStore(storeRepository.findById(physicalPhoneRequest.getStoreId()).orElseThrow(() -> new EntityNotFoundException("Store not found: " + physicalPhoneRequest.getStoreId())));
-        updatedPhysicalPhone.setSupplier(supplierRepository.findById(physicalPhoneRequest.getSupplierId()).orElseThrow(() -> new EntityNotFoundException("Supplier not found: " + physicalPhoneRequest.getSupplierId())));
-        updatedPhysicalPhone.setSpecification(specificationRepository.findByModelIgnoreCase(physicalPhoneRequest.getSpecificationModel()).orElseThrow(() -> new EntityNotFoundException("Specification not found: " + physicalPhoneRequest.getSpecificationModel())));
+        updatedPhysicalPhone.setStore(storeRepository.findById(physicalPhoneRequest.getStoreId()).orElseThrow(BusinessLogicException::StoreNotFound));
+        updatedPhysicalPhone.setSupplier(supplierRepository.findById(physicalPhoneRequest.getSupplierId()).orElseThrow(BusinessLogicException::SupplierNotFound));
+        updatedPhysicalPhone.setSpecification(specificationRepository.findByModelIgnoreCase(physicalPhoneRequest.getSpecificationModel()).orElseThrow(BusinessLogicException::SpecificationNotFound));
         return physicalPhoneMapper.toDto(physicalPhoneRepository.save(updatedPhysicalPhone));
     }
 
     @Override
     public PhysicalPhoneDto findByImei(String imei) throws EntityNotFoundException {
-        return physicalPhoneMapper.toDto(physicalPhoneRepository.findByImei(imei).orElseThrow(() -> new EntityNotFoundException("Phone not found with IMEI :" + imei)));
+        return physicalPhoneMapper.toDto(physicalPhoneRepository.findByImei(imei).orElseThrow(BusinessLogicException::PhoneNotFound));
     }
 
     @Override

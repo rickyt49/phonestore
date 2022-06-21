@@ -5,6 +5,7 @@ import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.service.SpecificationService;
 import com.axonactive.phonestore.service.dto.SpecificationDto;
 import com.axonactive.phonestore.service.mapper.SpecificationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(SpecificationResource.PATH)
 public class SpecificationResource {

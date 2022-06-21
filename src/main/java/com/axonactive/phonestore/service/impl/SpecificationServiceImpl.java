@@ -2,16 +2,19 @@ package com.axonactive.phonestore.service.impl;
 
 import com.axonactive.phonestore.api.request.SpecificationRequest;
 import com.axonactive.phonestore.entity.Specification;
+import com.axonactive.phonestore.exception.BusinessLogicException;
 import com.axonactive.phonestore.exception.EntityNotFoundException;
 import com.axonactive.phonestore.repository.SpecificationRepository;
 import com.axonactive.phonestore.service.SpecificationService;
 import com.axonactive.phonestore.service.dto.SpecificationDto;
 import com.axonactive.phonestore.service.mapper.SpecificationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class SpecificationServiceImpl implements SpecificationService {
     @Autowired
@@ -27,7 +30,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 
     @Override
     public SpecificationDto findById(Integer id) throws EntityNotFoundException {
-        return specificationMapper.toDto(specificationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Specification not found: " + id)));
+        return specificationMapper.toDto(specificationRepository.findById(id).orElseThrow(BusinessLogicException::SpecificationNotFound));
     }
 
     @Override
@@ -55,7 +58,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 
     @Override
     public SpecificationDto update(Integer id, SpecificationRequest specificationRequest) throws EntityNotFoundException {
-        Specification updatedSpec = specificationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Specification not found: " + id));
+        Specification updatedSpec = specificationRepository.findById(id).orElseThrow(BusinessLogicException::SpecificationNotFound);
         updatedSpec.setModel(specificationRequest.getModel());
         updatedSpec.setCpu(specificationRequest.getCpu());
         updatedSpec.setGpu(specificationRequest.getGpu());
