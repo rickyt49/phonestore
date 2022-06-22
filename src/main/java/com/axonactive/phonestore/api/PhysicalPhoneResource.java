@@ -24,7 +24,6 @@ public class PhysicalPhoneResource {
     private PhysicalPhoneService physicalPhoneService;
 
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<PhysicalPhoneDto>> getAll() {

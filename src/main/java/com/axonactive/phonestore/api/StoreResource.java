@@ -82,17 +82,17 @@ public class StoreResource {
     }
 
     @GetMapping("/{id}/profit")
-    public Integer getGrossProfit(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public ResponseEntity<Integer> getGrossProfit(@PathVariable("id") Integer id, @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         if ((startDate == null) && (endDate == null)) {
-            return billService.getTotalGrossProfit(id);
+            return ResponseEntity.ok(billService.getTotalGrossProfit(id));
         }
         if (startDate == null) {
-            return billService.getTotalGrossProfitBefore(id, endDate);
+            return ResponseEntity.ok(billService.getTotalGrossProfitBefore(id, endDate));
         }
         if (endDate == null) {
-            return billService.getTotalGrossProfitAfter(id, startDate);
+            return ResponseEntity.ok(billService.getTotalGrossProfitAfter(id, startDate));
         }
-        return billService.getTotalGrossProfitBetween(id, startDate, endDate);
+        return ResponseEntity.ok(billService.getTotalGrossProfitBetween(id, startDate, endDate));
     }
 
     @GetMapping("/{id}/stockreport")
