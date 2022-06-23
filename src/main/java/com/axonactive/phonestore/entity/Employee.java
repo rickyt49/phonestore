@@ -1,5 +1,8 @@
 package com.axonactive.phonestore.entity;
 
+import com.axonactive.phonestore.entity.enumerate.EmployeeStatus;
+import com.axonactive.phonestore.entity.enumerate.EmployeeType;
+import com.axonactive.phonestore.entity.enumerate.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

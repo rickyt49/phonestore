@@ -12,6 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import java.nio.BufferUnderflowException;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -20,18 +25,20 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
-    CustomerMapper customerMapper;
+    private CustomerMapper customerMapper;
 
     @Override
     public List<CustomerDto> getAll() {
+        log.info("Searching for all customer");
         return customerMapper.toDtos(customerRepository.findAll());
     }
 
     @Override
-    public CustomerDto findById(Integer id) throws EntityNotFoundException {
+    public CustomerDto findById(Integer id) {
+        log.info("Searching for customer has id {}", id);
         return customerMapper.toDto(customerRepository.findById(id).orElseThrow(BusinessLogicException::CustomerNotFound));
     }
 
@@ -46,11 +53,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void delete(Integer id) {
+        log.info("Searching for customer has id {}", id);
+        customerRepository.findById(id).orElseThrow(BusinessLogicException::CustomerNotFound);
         customerRepository.deleteById(id);
     }
 
     @Override
-    public CustomerDto update(Integer id, CustomerRequest customerRequest) throws EntityNotFoundException {
+    public CustomerDto update(Integer id, CustomerRequest customerRequest) {
+        log.info("Searching for customer has id {}", id);
         Customer updatedCustomer = customerRepository.findById(id).orElseThrow(BusinessLogicException::CustomerNotFound);
         updatedCustomer.setFullName(customerRequest.getFullName());
         updatedCustomer.setAddress(customerRequest.getAddress());
@@ -60,11 +70,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> findByPhoneNumberContaining(String phoneNumber) {
+        log.info("Searching for customer with phone number containing {}", phoneNumber);
+//        if (!(phoneNumber.matches("[0-9]+")))
+//            throw BusinessLogicException.PhoneNumberBadRequest();
+//        else {
         return customerMapper.toDtos(customerRepository.findByPhoneNumberContaining(phoneNumber));
+//        }
     }
 
     @Override
     public List<CustomerDto> findByFullNameContaining(String name) {
+        log.info("Searching for customer with name containing {}", name);
         return customerMapper.toDtos(customerRepository.findByFullNameContaining(name));
     }
 }

@@ -10,13 +10,13 @@ import java.util.List;
 public interface OwnerService {
     List<OwnerDto> getAll();
 
-    OwnerDto findById(Integer id) throws EntityNotFoundException;
+    OwnerDto findById(Integer id) ;
 
     OwnerDto save(OwnerRequest ownerRequest);
 
     void delete(Integer id);
 
-    OwnerDto update(Integer id, OwnerRequest ownerRequest) throws EntityNotFoundException;
+    OwnerDto update(Integer id, OwnerRequest ownerRequest) ;
 
     List<Owner> findByPhoneNumberContaining(String phoneNumber);
 

@@ -18,18 +18,20 @@ import java.util.List;
 @Service
 public class SpecificationServiceImpl implements SpecificationService {
     @Autowired
-    SpecificationRepository specificationRepository;
+    private SpecificationRepository specificationRepository;
 
     @Autowired
-    SpecificationMapper specificationMapper;
+    private SpecificationMapper specificationMapper;
 
     @Override
     public List<SpecificationDto> getAll() {
+        log.info("Searching for all specifications");
         return specificationMapper.toDtos(specificationRepository.findAll());
     }
 
     @Override
-    public SpecificationDto findById(Integer id) throws EntityNotFoundException {
+    public SpecificationDto findById(Integer id) {
+        log.info("Searching for specification has id {}", id);
         return specificationMapper.toDto(specificationRepository.findById(id).orElseThrow(BusinessLogicException::SpecificationNotFound));
     }
 
@@ -53,11 +55,14 @@ public class SpecificationServiceImpl implements SpecificationService {
 
     @Override
     public void delete(Integer id) {
+        log.info("Searching for specification has id {}",id);
+        specificationRepository.findById(id).orElseThrow(BusinessLogicException::SpecificationNotFound);
         specificationRepository.deleteById(id);
     }
 
     @Override
-    public SpecificationDto update(Integer id, SpecificationRequest specificationRequest) throws EntityNotFoundException {
+    public SpecificationDto update(Integer id, SpecificationRequest specificationRequest) {
+        log.info("Searching for specification has id {}",id);
         Specification updatedSpec = specificationRepository.findById(id).orElseThrow(BusinessLogicException::SpecificationNotFound);
         updatedSpec.setModel(specificationRequest.getModel());
         updatedSpec.setCpu(specificationRequest.getCpu());

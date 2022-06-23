@@ -9,11 +9,11 @@ import java.util.List;
 public interface SpecificationService {
     List<SpecificationDto> getAll();
 
-    SpecificationDto findById(Integer id) throws EntityNotFoundException;
+    SpecificationDto findById(Integer id) ;
 
     SpecificationDto save(SpecificationRequest specification);
 
     void delete(Integer id);
 
-    SpecificationDto update(Integer id, SpecificationRequest specificationRequest) throws EntityNotFoundException;
+    SpecificationDto update(Integer id, SpecificationRequest specificationRequest) ;
 }

@@ -9,13 +9,13 @@ import java.util.List;
 public interface CustomerService {
     List<CustomerDto> getAll();
 
-    CustomerDto findById(Integer id) throws EntityNotFoundException;
+    CustomerDto findById(Integer id);
 
     CustomerDto save(CustomerRequest customerRequest);
 
     void delete(Integer id);
 
-    CustomerDto update(Integer id, CustomerRequest customerRequest) throws EntityNotFoundException;
+    CustomerDto update(Integer id, CustomerRequest customerRequest);
 
     List<CustomerDto> findByPhoneNumberContaining(String phoneNumber);
 

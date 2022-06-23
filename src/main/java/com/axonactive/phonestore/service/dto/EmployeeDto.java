@@ -1,8 +1,8 @@
 package com.axonactive.phonestore.service.dto;
 
-import com.axonactive.phonestore.entity.EmployeeStatus;
-import com.axonactive.phonestore.entity.EmployeeType;
-import com.axonactive.phonestore.entity.Gender;
+import com.axonactive.phonestore.entity.enumerate.EmployeeStatus;
+import com.axonactive.phonestore.entity.enumerate.EmployeeType;
+import com.axonactive.phonestore.entity.enumerate.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

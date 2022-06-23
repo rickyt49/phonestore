@@ -9,15 +9,15 @@ import java.util.List;
 public interface PhysicalPhoneService {
     List<PhysicalPhoneDto> getAll();
 
-    PhysicalPhoneDto findById(Integer id) throws EntityNotFoundException;
+    PhysicalPhoneDto findById(Integer id) ;
 
-    PhysicalPhoneDto save(PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException;
+    PhysicalPhoneDto save(PhysicalPhoneRequest physicalPhoneRequest) ;
 
     void delete(Integer id);
 
-    PhysicalPhoneDto update(Integer id, PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException;
+    PhysicalPhoneDto update(Integer id, PhysicalPhoneRequest physicalPhoneRequest) ;
 
-    PhysicalPhoneDto findByImei(String imei) throws EntityNotFoundException;
+    PhysicalPhoneDto findByImei(String imei) ;
 
     List<PhysicalPhoneDto> findAllAvailablePhone();
 

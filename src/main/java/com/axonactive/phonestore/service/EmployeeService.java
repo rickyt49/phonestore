@@ -10,13 +10,13 @@ import java.util.List;
 public interface EmployeeService {
     List<EmployeeDto> getAll();
 
-    EmployeeDto findById(Integer id) throws EntityNotFoundException;
+    EmployeeDto findById(Integer id) ;
 
-    EmployeeDto save(EmployeeRequest employeeRequest) throws EntityNotFoundException;
+    EmployeeDto save(EmployeeRequest employeeRequest) ;
 
     void delete(Integer id);
 
-    EmployeeDto update(Integer id, EmployeeRequest employeeRequest) throws EntityNotFoundException;
+    EmployeeDto update(Integer id, EmployeeRequest employeeRequest) ;
 
     List<EmployeeDto> getAllActiveEmployee();
 }

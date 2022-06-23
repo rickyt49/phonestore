@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -30,12 +31,12 @@ public class OwnerResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OwnerDto> findOwnerById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
+    public ResponseEntity<OwnerDto> findOwnerById(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.ok(ownerService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<OwnerDto> add(@RequestBody OwnerRequest ownerRequest) {
+    public ResponseEntity<OwnerDto> add(@Valid @RequestBody OwnerRequest ownerRequest) {
         OwnerDto createdOwner = ownerService.save(ownerRequest);
         return ResponseEntity.created(URI.create(OwnerResource.PATH + "/" + createdOwner.getId())).body(createdOwner);
     }
@@ -47,7 +48,7 @@ public class OwnerResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OwnerDto> update(@PathVariable(value = "id") Integer id, @RequestBody OwnerRequest ownerRequest) throws EntityNotFoundException {
+    public ResponseEntity<OwnerDto> update(@PathVariable(value = "id") Integer id, @Valid @RequestBody OwnerRequest ownerRequest) {
         return ResponseEntity.ok(ownerService.update(id, ownerRequest));
     }
 

@@ -13,13 +13,13 @@ import java.util.List;
 public interface BillService {
     List<BillDto> getAll();
 
-    BillDto findById(Integer id) throws EntityNotFoundException;
+    BillDto findById(Integer id) ;
 
-    BillDto save(BillRequest bill) throws EntityNotFoundException;
+    BillDto save(BillRequest bill) ;
 
-    void delete(Integer id) throws EntityNotFoundException;
+    void delete(Integer id) ;
 
-    BillDto update(Integer id, BillRequest billRequest) throws EntityNotFoundException;
+    BillDto update(Integer id, BillRequest billRequest) ;
 
     List<BillDto> findByEmployeeIdAndSaleDateBetween(Integer id, LocalDate startDate, LocalDate endDate);
 

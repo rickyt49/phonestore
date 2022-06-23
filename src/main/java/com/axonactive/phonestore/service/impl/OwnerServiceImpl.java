@@ -24,11 +24,14 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public List<OwnerDto> getAll() {
+
+        log.info("Searching for all owner");
         return ownerMapper.toDtos(ownerRepository.findAll());
     }
 
     @Override
-    public OwnerDto findById(Integer id) throws EntityNotFoundException {
+    public OwnerDto findById(Integer id) {
+        log.info("Searching for owner has id {}", id);
         return ownerMapper.toDto(ownerRepository.findById(id).orElseThrow(BusinessLogicException::OwnerNotFound));
     }
 
@@ -43,12 +46,16 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void delete(Integer id) {
+        log.info("Searching for owner has id {}", id);
+        ownerRepository.findById(id).orElseThrow(BusinessLogicException::OwnerNotFound);
         ownerRepository.deleteById(id);
     }
 
     @Override
-    public OwnerDto update(Integer id, OwnerRequest ownerRequest) throws EntityNotFoundException {
+    public OwnerDto update(Integer id, OwnerRequest ownerRequest) {
+        log.info("Searching for owner has id {}", id);
         Owner updatedOwner = ownerRepository.findById(id).orElseThrow(BusinessLogicException::OwnerNotFound);
+
         updatedOwner.setFullName(ownerRequest.getFullName());
         updatedOwner.setAddress(ownerRequest.getAddress());
         updatedOwner.setPhoneNumber(ownerRequest.getPhoneNumber());
@@ -57,11 +64,17 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public List<Owner> findByPhoneNumberContaining(String phoneNumber) {
-        return ownerRepository.findByPhoneNumberContaining(phoneNumber);
+        log.info("Searching for employee with phone number containing {}", phoneNumber);
+        if (!(phoneNumber.matches("[0-9]+"))) {
+            throw BusinessLogicException.PhoneNumberBadRequest();
+        } else {
+            return ownerRepository.findByPhoneNumberContaining(phoneNumber);
+        }
     }
 
     @Override
     public List<Owner> findByFullNameContaining(String name) {
+        log.info("Searching for employee with name containing {}", name);
         return ownerRepository.findByFullNameContaining(name);
     }
 

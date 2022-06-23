@@ -1,7 +1,7 @@
 package com.axonactive.phonestore.service.dto;
 
-import com.axonactive.phonestore.entity.Condition;
-import com.axonactive.phonestore.entity.PhoneStatus;
+import com.axonactive.phonestore.entity.enumerate.Condition;
+import com.axonactive.phonestore.entity.enumerate.PhoneStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

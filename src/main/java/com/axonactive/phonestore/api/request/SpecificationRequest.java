@@ -1,6 +1,6 @@
 package com.axonactive.phonestore.api.request;
 
-import com.axonactive.phonestore.entity.ManufacturerStatus;
+import com.axonactive.phonestore.entity.enumerate.ManufacturerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

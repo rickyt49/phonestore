@@ -11,9 +11,9 @@ import java.util.List;
 public interface StoreService {
     List<StoreDto> getAll();
 
-    StoreDto findById(Integer id) throws EntityNotFoundException;
+    StoreDto findById(Integer id) ;
 
-    StoreDto save(StoreRequest storeRequest) throws EntityNotFoundException;
+    StoreDto save(StoreRequest storeRequest) ;
 
     void delete(Integer id);
 

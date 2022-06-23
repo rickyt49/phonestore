@@ -1,5 +1,7 @@
 package com.axonactive.phonestore.entity;
 
+import com.axonactive.phonestore.entity.enumerate.Condition;
+import com.axonactive.phonestore.entity.enumerate.PhoneStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

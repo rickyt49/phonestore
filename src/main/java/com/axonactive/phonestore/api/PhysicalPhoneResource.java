@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -32,13 +33,13 @@ public class PhysicalPhoneResource {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping("/{id}")
-    public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
+    public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.ok(physicalPhoneService.findById(id));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PostMapping
-    public ResponseEntity<PhysicalPhoneDto> add(@RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
+    public ResponseEntity<PhysicalPhoneDto> add(@Valid @RequestBody PhysicalPhoneRequest physicalPhoneRequest) {
         PhysicalPhoneDto addedPhone = physicalPhoneService.save(physicalPhoneRequest);
         return ResponseEntity.created(URI.create(PhysicalPhoneResource.PATH + "/" + addedPhone.getId())).body(addedPhone);
     }
@@ -52,7 +53,7 @@ public class PhysicalPhoneResource {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PutMapping("/{id}")
-    public ResponseEntity<PhysicalPhoneDto> update(@PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) throws EntityNotFoundException {
+    public ResponseEntity<PhysicalPhoneDto> update(@Valid @PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) {
         return ResponseEntity.ok(physicalPhoneService.update(id, physicalPhoneRequest));
     }
 

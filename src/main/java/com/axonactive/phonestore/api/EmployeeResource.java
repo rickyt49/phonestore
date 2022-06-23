@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,9 +27,6 @@ public class EmployeeResource {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
-    private EmployeeMapper employeeMapper;
-
-    @Autowired
     private BillService billService;
 
     @GetMapping
@@ -37,12 +35,12 @@ public class EmployeeResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable(value = "id") Integer id)  {
         return ResponseEntity.ok(employeeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDto> add(@RequestBody EmployeeRequest employeeRequest) throws EntityNotFoundException {
+    public ResponseEntity<EmployeeDto> add(@Valid @RequestBody EmployeeRequest employeeRequest)  {
         EmployeeDto createdEmployee = employeeService.save(employeeRequest);
         return ResponseEntity.created(URI.create(EmployeeResource.PATH + "/" + createdEmployee.getId())).body(createdEmployee);
     }
@@ -54,7 +52,7 @@ public class EmployeeResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Integer id, @RequestBody EmployeeRequest employeeRequest) throws EntityNotFoundException {
+    public ResponseEntity<EmployeeDto> update(@PathVariable(value = "id") Integer id,@Valid @RequestBody EmployeeRequest employeeRequest)  {
         return ResponseEntity.ok(employeeService.update(id, employeeRequest));
     }
 

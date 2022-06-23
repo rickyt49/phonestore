@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,12 +41,12 @@ public class StoreResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StoreDto> findStoreById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
+    public ResponseEntity<StoreDto> findStoreById(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.ok(storeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<StoreDto> add(@RequestBody StoreRequest storeRequest) throws EntityNotFoundException {
+    public ResponseEntity<StoreDto> add(@Valid @RequestBody StoreRequest storeRequest) {
         StoreDto createdStore = storeService.save(storeRequest);
         return ResponseEntity.created(URI.create(StoreResource.PATH + "/" + createdStore.getId())).body(createdStore);
     }
@@ -57,7 +58,7 @@ public class StoreResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StoreDto> update(@PathVariable(value = "id") Integer id, @RequestBody StoreRequest storeRequest) throws EntityNotFoundException {
+    public ResponseEntity<StoreDto> update(@PathVariable(value = "id") Integer id, @Valid @RequestBody StoreRequest storeRequest) {
 
         return ResponseEntity.ok(storeService.update(id, storeRequest));
     }

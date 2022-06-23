@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -20,8 +21,6 @@ public class SpecificationResource {
     public static final String PATH = "/api/specifications";
     @Autowired
     private SpecificationService specificationService;
-    @Autowired
-    private SpecificationMapper specificationMapper;
 
     @GetMapping
     public ResponseEntity<List<SpecificationDto>> getAll() {
@@ -29,18 +28,18 @@ public class SpecificationResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SpecificationDto> findSpecificationById(@PathVariable(value = "id") Integer id) throws EntityNotFoundException {
+    public ResponseEntity<SpecificationDto> findSpecificationById(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.ok(specificationService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<SpecificationDto> add(@RequestBody SpecificationRequest specificationRequest) {
+    public ResponseEntity<SpecificationDto> add(@Valid @RequestBody SpecificationRequest specificationRequest) {
         SpecificationDto createdSpecification = specificationService.save(specificationRequest);
         return ResponseEntity.created(URI.create(SpecificationResource.PATH + "/" + createdSpecification.getId())).body(createdSpecification);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SpecificationDto> update(@PathVariable(value = "id") Integer id, @RequestBody SpecificationRequest specificationRequest) throws EntityNotFoundException {
+    public ResponseEntity<SpecificationDto> update(@Valid @PathVariable(value = "id") Integer id, @RequestBody SpecificationRequest specificationRequest) {
         return ResponseEntity.ok(specificationService.update(id, specificationRequest));
     }
 

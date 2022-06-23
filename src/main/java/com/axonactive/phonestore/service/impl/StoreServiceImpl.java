@@ -21,30 +21,34 @@ import java.util.List;
 @Service
 public class StoreServiceImpl implements StoreService {
     @Autowired
-    StoreRepository storeRepository;
+    private StoreRepository storeRepository;
 
     @Autowired
-    StoreMapper storeMapper;
+    private StoreMapper storeMapper;
 
     @Autowired
-    OwnerRepository ownerRepository;
+    private OwnerRepository ownerRepository;
 
     @Override
     public List<StoreDto> getAll() {
+        log.info("Searching for all stores");
         return storeMapper.toDtos(storeRepository.findAll());
     }
 
     @Override
-    public StoreDto findById(Integer id) throws EntityNotFoundException {
+    public StoreDto findById(Integer id) {
+        log.info("Searching for store has id {}", id);
         return storeMapper.toDto(storeRepository.findById(id).orElseThrow(BusinessLogicException::StoreNotFound));
     }
 
     @Override
-    public StoreDto save(StoreRequest storeRequest) throws EntityNotFoundException {
+    public StoreDto save(StoreRequest storeRequest) {
         Store createdStore = new Store();
         createdStore.setName(storeRequest.getName());
         createdStore.setPhoneNumber(storeRequest.getPhoneNumber());
         createdStore.setCity(storeRequest.getCity());
+
+        log.info("Searching for owner has id {}", storeRequest.getOwnerId());
         createdStore.setOwner(ownerRepository.findById(storeRequest.getOwnerId()).orElseThrow(BusinessLogicException::OwnerNotFound));
         createdStore.setAddress(storeRequest.getAddress());
         return storeMapper.toDto(storeRepository.save(createdStore));
@@ -57,7 +61,10 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreDto update(Integer id, StoreRequest storeRequest) {
+        log.info("Searching for store has id {}", id);
         Store updatedStore = storeRepository.findById(id).orElseThrow(BusinessLogicException::StoreNotFound);
+
+        log.info("Searching for owner has id {}", storeRequest.getOwnerId());
         updatedStore.setOwner(ownerRepository.findById(storeRequest.getOwnerId()).orElseThrow(BusinessLogicException::OwnerNotFound));
         updatedStore.setName(storeRequest.getName());
         updatedStore.setAddress(storeRequest.getAddress());
@@ -68,11 +75,13 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<PhoneModelAndAmountDto> getPhoneModelAndItsAmountByStoreId(Integer storeId) {
+        log.info("Getting phone store report of store has id {}", storeId);
         return storeRepository.getPhoneModelAndItsAmountByStoreId(storeId);
     }
 
     @Override
     public List<CustomerAndTotalPurchaseDto> getCustomerTotalPurchaseReportByStoreId(Integer storeId) {
+        log.info("Getting customer report of store has id {}", storeId);
         return storeRepository.getCustomerTotalPurchaseReportByStoreId(storeId);
     }
 

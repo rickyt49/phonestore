@@ -31,6 +31,10 @@ public class BusinessLogicException {
     private static final String PHONE_NOT_FOUND_MSG = "Phone Not Found";
 
 
+    private static final String PHONE_NUMBER_BAD_REQUEST_MSG_KEY = "PhoneNumberWrongFormat";
+    private static final String PHONE_NUMBER_BAD_REQUEST_MSG = "Phone Number Wrong Format";
+
+
     public static ResponseException notFound(String messageKey, String message) {
         return new ResponseException(messageKey, message, HttpStatus.NOT_FOUND);
     }
@@ -77,5 +81,9 @@ public class BusinessLogicException {
 
     public static ResponseException PhoneNotFound() {
         return notFound(PHONE_NOT_FOUND_MSG_KEY, PHONE_NOT_FOUND_MSG);
+    }
+
+    public static ResponseException PhoneNumberBadRequest() {
+        return badRequest(PHONE_NUMBER_BAD_REQUEST_MSG_KEY, PHONE_NUMBER_BAD_REQUEST_MSG);
     }
 }

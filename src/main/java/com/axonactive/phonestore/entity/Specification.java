@@ -1,5 +1,6 @@
 package com.axonactive.phonestore.entity;
 
+import com.axonactive.phonestore.entity.enumerate.ManufacturerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
