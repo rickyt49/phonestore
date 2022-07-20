@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PhysicalPhoneDto {
     private Integer id;
-    private String model;
+    private String specificationModel;
     private Long imei;
     private String color;
     private String memorySize;
@@ -22,4 +22,6 @@ public class PhysicalPhoneDto {
     private PhoneStatus phoneStatus;
     private Integer importPrice;
     private LocalDate importDate;
+    private Integer storeId;
+    private Integer supplierId;
 }

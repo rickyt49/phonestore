@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +37,7 @@ public class PhysicalPhoneServiceImpl implements PhysicalPhoneService {
 
     public List<PhysicalPhoneDto> getAll() {
         log.info("Searching for all phones");
-        return physicalPhoneMapper.toDtos(physicalPhoneRepository.findAll());
+        return physicalPhoneMapper.toDtos(physicalPhoneRepository.findAll()).stream().sorted(Comparator.comparingInt(PhysicalPhoneDto::getId).reversed()).collect(Collectors.toList());
     }
 
     @Override

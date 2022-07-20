@@ -25,39 +25,39 @@ public class PhysicalPhoneResource {
     private PhysicalPhoneService physicalPhoneService;
 
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<PhysicalPhoneDto>> getAll() {
         return ResponseEntity.ok(physicalPhoneService.getAll());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping("/{id}")
     public ResponseEntity<PhysicalPhoneDto> findPhoneById(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.ok(physicalPhoneService.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PostMapping
     public ResponseEntity<PhysicalPhoneDto> add(@Valid @RequestBody PhysicalPhoneRequest physicalPhoneRequest) {
         PhysicalPhoneDto addedPhone = physicalPhoneService.save(physicalPhoneRequest);
         return ResponseEntity.created(URI.create(PhysicalPhoneResource.PATH + "/" + addedPhone.getId())).body(addedPhone);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(value = "id") Integer id) {
         physicalPhoneService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PutMapping("/{id}")
     public ResponseEntity<PhysicalPhoneDto> update(@Valid @PathVariable(value = "id") Integer id, @RequestBody PhysicalPhoneRequest physicalPhoneRequest) {
         return ResponseEntity.ok(physicalPhoneService.update(id, physicalPhoneRequest));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping("/available")
     public ResponseEntity<List<PhysicalPhoneDto>> getAvailablePhone() {
         return ResponseEntity.ok(physicalPhoneService.findAllAvailablePhone());
